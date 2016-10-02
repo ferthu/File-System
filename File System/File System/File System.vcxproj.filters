@@ -39,6 +39,9 @@
     <ClCompile Include="blockTest.cpp">
       <Filter>Source Files\Test</Filter>
     </ClCompile>
+    <ClCompile Include="DirectoryReference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h">
@@ -51,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memblockdevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectoryReference.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

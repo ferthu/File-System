@@ -25,6 +25,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="DirectoryReference.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="memblockdevice.cpp" />
     <ClCompile Include="memBlockTest.cpp">
@@ -36,6 +37,7 @@
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="blockdevice.h" />
+    <ClInclude Include="DirectoryReference.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="memblockdevice.h" />
   </ItemGroup>
