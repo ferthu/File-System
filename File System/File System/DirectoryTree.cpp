@@ -3,7 +3,7 @@
 
 namespace file {
 
-	DirectoryTree::DirectoryTree(std::unique_ptr<Directory>& root)
+	DirectoryTree::DirectoryTree(std::unique_ptr<Directory> root)
 		: _root(std::move(root))
 	{
 	}

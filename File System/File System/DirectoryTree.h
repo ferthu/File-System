@@ -20,7 +20,8 @@ namespace file {
 	public:
 		/* Create a file tree from the root reference.
 		*/
-		DirectoryTree(std::unique_ptr<Directory>& root);
+		DirectoryTree(std::unique_ptr<Directory> root);
+		DirectoryTree(const DirectoryTree& root) = delete;
 		~DirectoryTree();
 
 		/* Get a node in the file tree.

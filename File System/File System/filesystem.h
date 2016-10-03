@@ -2,11 +2,15 @@
 #define FILESYSTEM_H
 
 #include "memblockdevice.h"
+#include"DirectoryTree.h"
 
 class FileSystem
 {
 private:
     MemBlockDevice mMemblockDevice;
+	/* The directory tree.
+	*/
+	file::DirectoryTree _root;
     // Here you can add your own data structures
 public:
     FileSystem();
@@ -17,17 +21,16 @@ public:
      * However, you are free to change the parameterlist and specify your own returntype for each function below.
      */
 
-    /* This function creates a file in the filesystem */
-    // createFile(...)
 
     /* Creates a folder in the filesystem */
-    // createFolderi(...);
+	err::FileError createFolder(const std::vector<std::string>& directory, const std::string& folder_name);
+    /* Removes a folder in the filesystem */
+	err::FileError removeFolder(const std::vector<std::string>& directory, const std::string& folder_name);
 
     /* Removes a file in the filesystem */
     // removeFile(...);
-
-    /* Removes a folder in the filesystem */
-    // removeFolder(...);
+    /* This function creates a file in the filesystem */
+    // createFile(...)
 
     /* Function will move the current location to a specified location in the filesystem */
     // goToFolder(...);

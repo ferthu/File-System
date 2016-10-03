@@ -16,10 +16,16 @@
     <Filter Include="Source Files\Test">
       <UniqueIdentifier>{6598b5d2-c13a-487c-a0a0-22782394ed9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\DirectoryTree">
+    <Filter Include="Header Files\FileSystem">
+      <UniqueIdentifier>{8f44d136-cd18-4668-891b-86c2ef500682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\FileSystem\DirectoryTree">
       <UniqueIdentifier>{48735221-9174-4870-bc6d-b8eaaf56668b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\DirectoryTree">
+    <Filter Include="Source Files\FileSystem">
+      <UniqueIdentifier>{9852c413-0f02-4dec-b578-bc6b3d19725b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\FileSystem\DirectoryTree">
       <UniqueIdentifier>{ae4a5057-50f4-484c-aeb1-e8583cd6ee21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -28,9 +34,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="blockdevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="filesystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="memblockdevice.cpp">
@@ -49,13 +52,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="File.cpp">
-      <Filter>Source Files\DirectoryTree</Filter>
+      <Filter>Source Files\FileSystem\DirectoryTree</Filter>
     </ClCompile>
     <ClCompile Include="Directory.cpp">
-      <Filter>Source Files\DirectoryTree</Filter>
+      <Filter>Source Files\FileSystem\DirectoryTree</Filter>
     </ClCompile>
     <ClCompile Include="DirectoryTree.cpp">
-      <Filter>Source Files\DirectoryTree</Filter>
+      <Filter>Source Files\FileSystem\DirectoryTree</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem.cpp">
+      <Filter>Source Files\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="blockdevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memblockdevice.h">
@@ -78,16 +81,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
-      <Filter>Header Files\DirectoryTree</Filter>
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
     </ClInclude>
     <ClInclude Include="DirectoryAccess.h">
-      <Filter>Header Files\DirectoryTree</Filter>
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
     </ClInclude>
     <ClInclude Include="Directory.h">
-      <Filter>Header Files\DirectoryTree</Filter>
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
     </ClInclude>
     <ClInclude Include="DirectoryTree.h">
-      <Filter>Header Files\DirectoryTree</Filter>
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="FileError.h">
+      <Filter>Header Files\FileSystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

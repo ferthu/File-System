@@ -44,6 +44,7 @@
     <ClInclude Include="DirectoryReference.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Directory.h" />
+    <ClInclude Include="FileError.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="DirectoryTree.h" />
     <ClInclude Include="memblockdevice.h" />
