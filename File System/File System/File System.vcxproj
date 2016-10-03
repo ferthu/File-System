@@ -26,7 +26,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="DirectoryReference.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="FileNode.cpp" />
     <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="FileTree.cpp" />
     <ClCompile Include="memblockdevice.cpp" />
     <ClCompile Include="memBlockTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -38,8 +41,15 @@
     <ClInclude Include="block.h" />
     <ClInclude Include="blockdevice.h" />
     <ClInclude Include="DirectoryReference.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="FileNode.h" />
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="FileTree.h" />
     <ClInclude Include="memblockdevice.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="File System.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BB6FEA96-E5F2-417E-AD98-569027CD3B19}</ProjectGuid>
