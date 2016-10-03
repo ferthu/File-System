@@ -16,11 +16,11 @@
     <Filter Include="Source Files\Test">
       <UniqueIdentifier>{6598b5d2-c13a-487c-a0a0-22782394ed9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\FileTree">
-      <UniqueIdentifier>{ae4a5057-50f4-484c-aeb1-e8583cd6ee21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\FileTree">
+    <Filter Include="Header Files\DirectoryTree">
       <UniqueIdentifier>{48735221-9174-4870-bc6d-b8eaaf56668b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DirectoryTree">
+      <UniqueIdentifier>{ae4a5057-50f4-484c-aeb1-e8583cd6ee21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,14 +48,14 @@
     <ClCompile Include="DirectoryReference.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="FileNode.cpp">
-      <Filter>Source Files\FileTree</Filter>
-    </ClCompile>
     <ClCompile Include="File.cpp">
-      <Filter>Source Files\FileTree</Filter>
+      <Filter>Source Files\DirectoryTree</Filter>
     </ClCompile>
-    <ClCompile Include="FileTree.cpp">
-      <Filter>Source Files\FileTree</Filter>
+    <ClCompile Include="Directory.cpp">
+      <Filter>Source Files\DirectoryTree</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryTree.cpp">
+      <Filter>Source Files\DirectoryTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,20 +74,20 @@
     <ClInclude Include="DirectoryReference.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FileNode.h">
-      <Filter>Header Files\FileTree</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="File.h">
-      <Filter>Header Files\FileTree</Filter>
-    </ClInclude>
-    <ClInclude Include="FileTree.h">
-      <Filter>Header Files\FileTree</Filter>
+      <Filter>Header Files\DirectoryTree</Filter>
     </ClInclude>
     <ClInclude Include="DirectoryAccess.h">
-      <Filter>Header Files\FileTree</Filter>
+      <Filter>Header Files\DirectoryTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Directory.h">
+      <Filter>Header Files\DirectoryTree</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectoryTree.h">
+      <Filter>Header Files\DirectoryTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

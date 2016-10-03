@@ -1,6 +1,6 @@
 #pragma once
 
-#include"FileNode.h"
+#include"Directory.h"
 #include"File.h"
 #include<memory>
 
@@ -9,19 +9,19 @@ namespace file {
 	
 	/*	Wrapper containing the root node and access functions to the file tree.
 	*/
-	class FileTree
+	class DirectoryTree
 	{
 	private:
 
 		/* Root node.
 		*/
-		std::unique_ptr<FileNode> _root;
+		std::unique_ptr<Directory> _root;
 
 	public:
 		/* Create a file tree from the root reference.
 		*/
-		FileTree(std::unique_ptr<FileNode>& root);
-		~FileTree();
+		DirectoryTree(std::unique_ptr<Directory>& root);
+		~DirectoryTree();
 
 		/* Get a node in the file tree.
 		*/

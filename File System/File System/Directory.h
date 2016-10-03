@@ -9,18 +9,24 @@ namespace file {
 
 	/* The file node
 	*/
-	class FileNode
+	class Directory
 	{
 	private:
+		/* Name of this 
+		*/
+		std::string _directory_name;
 		/* References to the child directories
 		*/
-		std::vector<FileNode*> _directories;
+		std::vector<Directory*> _directories;
 		/* Files contained in the directory
 		*/
 		std::vector<File> _files;
+		/* Compares a directory name
+		*/
+		bool compareDirectoryName(const std::string& dir_name);
 	public:
-		FileNode();
-		virtual ~FileNode();
+		Directory();
+		virtual ~Directory();
 
 		/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.  
 		*/

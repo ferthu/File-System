@@ -4,7 +4,7 @@ namespace file {
 
 	/* Forward Declaration
 	*/
-	class FileNode;
+	class Directory;
 
 	/* Directory access result when querying for a directory. Contains directory link on successfull access.
 	*/
@@ -25,12 +25,12 @@ namespace file {
 		unsigned int _lvl;
 		/* Link to the directory accessed, null if error occured.
 		*/
-		FileNode* _directory;
+		Directory* _directory;
 		/* The error that occured
 		*/
 		Error _error;
 
-		DirectoryAccess(unsigned int lvl, FileNode* directory, Error error) :
+		DirectoryAccess(unsigned int lvl, Directory* directory, Error error) :
 			_directory(directory), _lvl(lvl), _error(error)
 		{		}
 		/* Function that determines if the directory was successully accessed
