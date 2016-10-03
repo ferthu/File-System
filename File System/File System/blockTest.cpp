@@ -6,7 +6,7 @@
 
 const int SIZE = 512;
 
-int main(void) {
+int main_test_block(void) {
     Block *a = new Block(SIZE);
 
     /* Testing writeBlock with char-arr */

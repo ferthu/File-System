@@ -86,6 +86,9 @@
     <ClInclude Include="FileTree.h">
       <Filter>Header Files\FileTree</Filter>
     </ClInclude>
+    <ClInclude Include="DirectoryAccess.h">
+      <Filter>Header Files\FileTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="File System.rc">

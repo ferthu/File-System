@@ -9,7 +9,7 @@
 const int SIZE = 512;
 const int BLOCKNR = 250;
 
-int main(void) {
+int main_test_block_device(void) {
 	std::cout << "MEMBLOCKDEVICE TEST\n\n";
     MemBlockDevice *a = new MemBlockDevice(-3);
 	std::cout << "Testing constructor, size: " << a->size() << std::endl;

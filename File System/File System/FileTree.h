@@ -22,6 +22,16 @@ namespace file {
 		*/
 		FileTree(std::unique_ptr<FileNode>& root);
 		~FileTree();
+
+		/* Get a node in the file tree.
+		*/
+		DirectoryAccess accessDirectory(const std::vector<std::string>& directory);
+		/* Get a node in the file tree.
+		*/
+		const DirectoryAccess accessDirectory(const std::vector<std::string>& directory) const;
+
+		
+
 	};
 
 }

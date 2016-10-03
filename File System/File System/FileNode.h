@@ -3,6 +3,7 @@
 #include<vector>
 #include<string>
 #include"File.h"
+#include"DirectoryAccess.h"
 
 namespace file {
 
@@ -20,6 +21,11 @@ namespace file {
 	public:
 		FileNode();
 		virtual ~FileNode();
+
+		/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.  
+		*/
+		DirectoryAccess accessDirectory(const std::vector<std::string>& directory, unsigned int& traversal_lvl);
+		
 	};
 
 }
