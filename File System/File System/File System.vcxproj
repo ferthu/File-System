@@ -47,6 +47,7 @@
     <ClInclude Include="FileError.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="DirectoryTree.h" />
+    <ClInclude Include="IBlockOwner.h" />
     <ClInclude Include="memblockdevice.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

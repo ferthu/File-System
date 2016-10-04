@@ -32,11 +32,15 @@ public:
     void reset(char c = 0);  // Sets every element in char-array to 0
     int size() const;   // returns the size
     Block readBlock() const;    // Returns a copy of block
+	/* Reads the specified amount of bytes into the pointer
+	*/
+	int readBlock(char* data, size_t byte_size) const;
 
     /* Write a block */
     int writeBlock(const std::string &strBlock);
     int writeBlock(const std::vector<char> &vec);
     void writeBlock(const char cArr[]);     // Use with caution! Make sure that cArr is at least as large as private member block.
+	int writeBlock(const char* data, size_t byte_size);
 
     std::string toString() const;
 };

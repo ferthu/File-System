@@ -56,6 +56,14 @@ int Block::size() const {
 Block Block::readBlock() const {
     return Block(*this);
 }
+int Block::readBlock(char* data, size_t byte_size) const {
+	int output = -2; // Assume not the same dimension
+	if (byte_size <= this->nrOfElements) {
+		std::memcpy(data, block, byte_size);
+		output = 1;
+	}
+	return output;
+}
 
 int Block::writeBlock(const std::string &strBlock) {
     int output = -2;    // Assume out of range
@@ -87,6 +95,14 @@ void Block::writeBlock(const char cArr[]) {
     for (int i = 0; i < this->nrOfElements; ++i) {
         this->block[i] = cArr[i];
     }
+}
+int Block::writeBlock(const char* data, size_t byte_size) {
+	int output = -2; // Assume not the same dimension
+	if (byte_size <= this->nrOfElements) {
+		std::memcpy(block, data, byte_size);
+		output = 1;
+	}
+	return output;
 }
 
 std::string Block::toString() const {

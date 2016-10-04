@@ -2,6 +2,8 @@
 
 
 namespace err {
+	/* Enum of the errors that can occur in the system.
+	*/
 	enum FileError {
 		SUCCESS = 0,
 		/* A specified directory did not exist at the directory level.

@@ -98,6 +98,9 @@
     <ClInclude Include="FileError.h">
       <Filter>Header Files\FileSystem</Filter>
     </ClInclude>
+    <ClInclude Include="IBlockOwner.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="File System.rc">

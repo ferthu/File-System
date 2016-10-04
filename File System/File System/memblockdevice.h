@@ -22,8 +22,12 @@ public:
     int writeBlock(int blockNr, const std::string &strBlock);
     int writeBlock(int blockNr, const char cArr[]);     // Use with care, make sure that cArr has at least the same dimension as block
 
+
     /* Reads a block */
     Block readBlock(int blockNr) const;
+	/* Read a set of blocks.
+	*/
+	std::string readBlock(const std::vector<int> blocks, size_t bytes) const;
 
     /* Resets all the blocks */
     void reset();
