@@ -9,11 +9,11 @@ class Block
 {
 private:
     char *block;
-    int nrOfElements;
+	unsigned int nrOfElements;
 
 public:
     /* Constructor */
-    Block(int nrOfElements = 512);    // overloaded (default) constructor
+    Block(unsigned int nrOfElements = 512);    // overloaded (default) constructor
     Block(const Block &other); // copy-constructor
 
     /* Destructor */

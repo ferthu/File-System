@@ -1,6 +1,6 @@
 #include "blockdevice.h"
 
-BlockDevice::BlockDevice(int nrOfBlocks) {
+BlockDevice::BlockDevice(unsigned int nrOfBlocks) {
     if (nrOfBlocks > 0)
         this->nrOfBlocks = nrOfBlocks;
     else
@@ -8,7 +8,6 @@ BlockDevice::BlockDevice(int nrOfBlocks) {
 
     this->memBlocks = new Block[this->nrOfBlocks];
     this->freePointer = 0;
-
 }
 
 BlockDevice::BlockDevice(const BlockDevice &other) {

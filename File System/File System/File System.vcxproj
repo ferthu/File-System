@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="block.cpp" />
     <ClCompile Include="blockdevice.cpp" />
+    <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="blockTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -30,6 +31,7 @@
     <ClCompile Include="Directory.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="DirectoryTree.cpp" />
+    <ClCompile Include="FileSystemHandle.cpp" />
     <ClCompile Include="memblockdevice.cpp" />
     <ClCompile Include="memBlockTest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -40,14 +42,19 @@
   <ItemGroup>
     <ClInclude Include="block.h" />
     <ClInclude Include="blockdevice.h" />
+    <ClInclude Include="BlockManager.h" />
     <ClInclude Include="DirectoryAccess.h" />
     <ClInclude Include="DirectoryReference.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="Directory.h" />
     <ClInclude Include="FileError.h" />
+    <ClInclude Include="FileHeader.h" />
+    <ClInclude Include="FileReference.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="DirectoryTree.h" />
+    <ClInclude Include="FileSystemHandle.h" />
     <ClInclude Include="IBlockOwner.h" />
+    <ClInclude Include="IDirectoryReference.h" />
     <ClInclude Include="memblockdevice.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

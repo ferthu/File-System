@@ -19,7 +19,7 @@ namespace file {
 	}
 	/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.
 	*/
-	DirectoryAccess Directory::accessDirectory(const std::vector<std::string>& directory, unsigned int& traversal_lvl) {
+	DirectoryAccess Directory::accessDirectory(const std::vector<std::string>& directory, unsigned int traversal_lvl) {
 		/* Check if destination directory is reached
 		*/
 		if(traversal_lvl == directory.size())
@@ -46,12 +46,53 @@ namespace file {
 	err::FileError Directory::removeDirectory(const std::string& name) {
 		for (size_t i = 0; i < _directories.size(); i++) {
 			if (_directories[i]->compareDirectoryName(name)) {
-				//Move the last directory to the slot and pop last element.
-				_directories[i] = std::move(_directories.back());
-				_directories.pop_back();
+				_directories.erase(_directories.begin() + i);
 				return err::SUCCESS;
 			}
 		}
 		return err::FOLDER_DOES_NOT_EXIST;
+	}
+	/* Get a file
+	name		<<	Name of the file
+	reference	>>	Return reference of the found file
+	return		>>	Returns if file was successfully found or if an error occured.
+	*/
+	err::FileError Directory::getFile(const std::string& name, FileReference& reference) {
+		for (size_t i = 0; i < _files.size(); i++) {
+			if (_files[i] == name) {
+				reference = _files[i];
+				return err::SUCCESS;
+			}
+		}
+		return err::FILE_NOT_FOUND;
+	}
+	/* Remove a file
+	ref		<<	Reference to the file
+	return	>>	Success if no error occured.
+	*/
+	err::FileError Directory::removeFile(const FileReference& ref) {
+		for (size_t i = 0; i < _files.size(); i++) {
+			if (_files[i] == ref._name) {
+				_files.erase(_files.begin() + i);
+				return err::SUCCESS;
+			}
+		}
+		return err::FILE_NOT_FOUND;
+	}
+	/* Get the file names
+	*/
+	std::vector<std::string> Directory::getFileNames() {
+		std::vector<std::string> names(_files.size());
+		for (size_t i = 0; i < _files.size(); i++)
+			names[i] = _files[i]._name;
+		return names;
+	}
+	/* Get the names of the child directories
+	*/
+	std::vector<std::string> Directory::getDirectoryNames() {
+		std::vector<std::string> names(_directories.size());
+		for (size_t i = 0; i < _directories.size(); i++)
+			names[i] = _directories[i]->_name;
+		return names;
 	}
 }

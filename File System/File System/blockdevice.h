@@ -14,7 +14,7 @@ protected:
     int nrOfBlocks;
     int freePointer;
 public:
-    BlockDevice(int nrOfBlocks);
+    BlockDevice(unsigned int nrOfBlocks);
     BlockDevice(const BlockDevice &other);
 
     virtual ~BlockDevice();

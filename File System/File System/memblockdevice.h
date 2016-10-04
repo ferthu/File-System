@@ -5,10 +5,10 @@
 class MemBlockDevice: public BlockDevice
 {
 public:
-    MemBlockDevice(int nrOfBlocks = 250);
+    MemBlockDevice(unsigned int nrOfBlocks = 250);
     MemBlockDevice(const MemBlockDevice &other);
 
-    ~MemBlockDevice();
+	virtual ~MemBlockDevice();
 
     /* Operators */
     MemBlockDevice& operator=(const MemBlockDevice &other);

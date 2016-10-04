@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 
-Block::Block(int size) {
+Block::Block(unsigned int size) {
     /* Setting size */
     if (size > 0)
         this->nrOfElements = size;

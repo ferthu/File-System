@@ -26,7 +26,7 @@ namespace file {
 		block_num	>>	The block to release
 		return		>>	Success if no error occured on releasing the block (access, invalid block number, already released block)
 		*/
-		virtual err::FileError release(unsigned int& block_num) = 0;
+		virtual err::FileError release(unsigned int block_num) = 0;
 		/* Release a set of blocks.
 		block_num	>>	The identities of the blocks to release.
 		return		>>	Success if no error occured on releasing the blocks (access, invalid block number, already released block)

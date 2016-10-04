@@ -51,9 +51,6 @@
     <ClCompile Include="DirectoryReference.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
-      <Filter>Source Files\FileSystem\DirectoryTree</Filter>
-    </ClCompile>
     <ClCompile Include="Directory.cpp">
       <Filter>Source Files\FileSystem\DirectoryTree</Filter>
     </ClCompile>
@@ -62,6 +59,15 @@
     </ClCompile>
     <ClCompile Include="filesystem.cpp">
       <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BlockManager.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystemHandle.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,9 +86,6 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
-    </ClInclude>
     <ClInclude Include="DirectoryAccess.h">
       <Filter>Header Files\FileSystem\DirectoryTree</Filter>
     </ClInclude>
@@ -100,6 +103,24 @@
     </ClInclude>
     <ClInclude Include="IBlockOwner.h">
       <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHeader.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="IDirectoryReference.h">
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
+    </ClInclude>
+    <ClInclude Include="FileReference.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockManager.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystemHandle.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,11 @@ namespace err {
 		/* A specified directory did not exist at the directory level.
 		*/
 		DIRECTORY_DOES_NOT_EXIST = 1,
-		FOLDER_DOES_NOT_EXIST = 2
+		/* Called if a specific folder is called for removal but it did not exist.
+		*/
+		FOLDER_DOES_NOT_EXIST = 2,
+		/* Called if a specific file is not found in a directory
+		*/
+		FILE_NOT_FOUND = 3
 	};
 }

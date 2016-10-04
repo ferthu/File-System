@@ -5,12 +5,14 @@
 #include"File.h"
 #include"DirectoryAccess.h"
 #include<memory>
+#include"FileReference.h"
+#include"IDirectoryReference.h"
 
 namespace file {
 
 	/* The file node
 	*/
-	class Directory
+	class Directory : public IDirectoryReference
 	{
 	private:
 		/* Name of this directory level
@@ -19,9 +21,9 @@ namespace file {
 		/* References to the child directories
 		*/
 		std::vector<std::unique_ptr<Directory>> _directories;
-		/* Files contained in the directory
+		/* References to file headers stored in memory.
 		*/
-		std::vector<File> _files;
+		std::vector<FileReference> _files;
 		/* Compares a directory name
 		*/
 		bool compareDirectoryName(const std::string& dir_name);
@@ -31,15 +33,32 @@ namespace file {
 
 		/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.  
 		*/
-		DirectoryAccess accessDirectory(const std::vector<std::string>& directory, unsigned int& traversal_lvl);
+		DirectoryAccess accessDirectory(const std::vector<std::string>& directory, unsigned int traversal_lvl);
 		/* Add a child directory to the node
 		*/
-		void addDirectory(std::unique_ptr<Directory>& child);
+		virtual void addDirectory(std::unique_ptr<Directory>& child);
 		/* Remove a child directory in the node
 		name	<<	Name of the directory to remove
 		return	>>	If the directory/folder was successfully removed
 		*/
-		err::FileError removeDirectory(const std::string& name);
+		virtual err::FileError removeDirectory(const std::string& name);
+		/* Get a file
+		name		<<	Name of the file
+		reference	>>	Return reference of the found file
+		return		>>	Returns if file was successfully found or if an error occured.
+		*/
+		virtual err::FileError getFile(const std::string& name, FileReference& reference);
+		/* Remove a file
+		ref		<<	Reference to the file
+		return	>>	Success if no error occured.
+		*/
+		virtual err::FileError removeFile(const FileReference& ref);
+		/* Get the file names
+		*/
+		virtual std::vector<std::string> getFileNames();
+		/* Get the names of the child directories
+		*/
+		virtual std::vector<std::string> getDirectoryNames();
 	};
 
 }

@@ -3,9 +3,8 @@
 #include<algorithm>
 #include<memory>
 
-MemBlockDevice::MemBlockDevice(int nrOfBlocks): BlockDevice(nrOfBlocks) {
-
-}
+MemBlockDevice::MemBlockDevice(unsigned int nrOfBlocks): 
+	BlockDevice(nrOfBlocks) {}
 
 MemBlockDevice::MemBlockDevice(const MemBlockDevice &other) : BlockDevice(other) {
 
