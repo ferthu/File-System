@@ -24,10 +24,16 @@ public:
     char operator[] (int index) const;  // []-operator
     friend std::ostream& operator<<(std::ostream &os, const Block& blck)
     {
-        for (int i = 0; i < blck.nrOfElements; ++i)
+        for (unsigned int i = 0; i < blck.nrOfElements; ++i)
             os << blck.block[i];
         return os;
     }
+	/* Get the front of the block
+	*/
+	char* begin();
+	/* Get the excluded end of the block
+	*/
+	char* end();
 
     void reset(char c = 0);  // Sets every element in char-array to 0
     int size() const;   // returns the size

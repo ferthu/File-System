@@ -28,7 +28,7 @@ public:
 	err::FileError removeFolder(const std::vector<std::string>& directory, const std::string& folder_name);
 
     /* This function creates a file in the filesystem */
-	err::FileError createFile(const std::vector<std::string>& directory, const std::string& file_name, const std::vector<char>& data)
+	err::FileError createFile(const std::vector<std::string>& directory, const std::string& file_name, const std::vector<char>& data);
     /* Removes a file in the filesystem */
     // removeFile(...);
 

@@ -2,6 +2,7 @@
 
 #include<string>
 #include<vector>
+#include<memory>
 #include"FileHeader.h"
 
 namespace file {
@@ -12,6 +13,7 @@ namespace file {
 	{
 	public:
 		File();
+		File(const std::string& name, char access, const std::string& data);
 		virtual ~File();
 
 		/* The header info of the file.
@@ -19,7 +21,7 @@ namespace file {
 		FileHeader _header;
 		/* Data contained in the file
 		*/
-		char* _data;
+		std::unique_ptr<char> _data;
 	};
 
 }

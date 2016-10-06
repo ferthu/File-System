@@ -44,6 +44,13 @@ char Block::operator[](int index) const {
     }
 }
 
+char*  Block::begin() {
+	return block;
+}
+char*  Block::end() {
+	return block + nrOfElements;
+}
+
 void Block::reset(char c) {
     for (int i = 0; i < this->nrOfElements; ++i)
         this->block[i] = c;

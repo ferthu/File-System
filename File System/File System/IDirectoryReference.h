@@ -1,6 +1,16 @@
 #pragma once
 
+#include<memory>
+#include<string>
+#include<vector>
+#include"FileReference.h"
+#include"FileError.h"
+
 namespace file {
+
+	/* Forward declaration
+	*/
+	class Directory;
 
 	/* Interface for referencing a directory object.
 	*/

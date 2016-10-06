@@ -28,6 +28,24 @@
     <Filter Include="Source Files\FileSystem\DirectoryTree">
       <UniqueIdentifier>{ae4a5057-50f4-484c-aeb1-e8583cd6ee21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Stream">
+      <UniqueIdentifier>{8a0b4b4f-8cac-4cac-a4d1-094950937323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stream">
+      <UniqueIdentifier>{7a01c807-ee2c-413f-bc02-5cf0a517ad45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Stream\Virtual">
+      <UniqueIdentifier>{06c53edd-4772-4ab0-b841-bf650482a07f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Stream\File">
+      <UniqueIdentifier>{910eabda-d42f-47f1-8091-49c152b46a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stream\File">
+      <UniqueIdentifier>{16c1fb56-baaa-4e37-b8ab-5218658ca20d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Stream\Virtual">
+      <UniqueIdentifier>{c2129483-bab3-4902-84a2-583e15c31c77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="block.cpp">
@@ -68,6 +86,30 @@
     </ClCompile>
     <ClCompile Include="FileSystemHandle.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryReader.cpp">
+      <Filter>Source Files\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryWriter.cpp">
+      <Filter>Source Files\Stream</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryFileReader.cpp">
+      <Filter>Source Files\Stream\File</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryFileWriter.cpp">
+      <Filter>Source Files\Stream\File</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualReader.cpp">
+      <Filter>Source Files\Stream\Virtual</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualStream.cpp">
+      <Filter>Source Files\Stream\Virtual</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualWriter.cpp">
+      <Filter>Source Files\Stream\Virtual</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +163,33 @@
     </ClInclude>
     <ClInclude Include="FileSystemHandle.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryReader.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryWriter.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="StringFunction.h">
+      <Filter>Header Files\Stream</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualStream.h">
+      <Filter>Header Files\Stream\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualReader.h">
+      <Filter>Header Files\Stream\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryFileWriter.h">
+      <Filter>Header Files\Stream\File</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryFileReader.h">
+      <Filter>Header Files\Stream\File</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualWriter.h">
+      <Filter>Header Files\Stream\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
