@@ -22,6 +22,18 @@ namespace file {
 		/* Data contained in the file
 		*/
 		std::unique_ptr<char> _data;
+
+		/* Set the data in the file
+		*/
+		void setData(const std::string& data);
+
+		/* Get data as string
+		*/
+		std::string getData();
+
+		/* Append the file
+		*/
+		void append(File& other);
 	};
 
 }

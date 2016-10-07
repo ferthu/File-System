@@ -48,4 +48,9 @@ namespace err {
 	static bool good(FileError err) {
 		return err == FileError::SUCCESS;
 	}
+	/* Returns if the file error is bad
+	*/
+	static bool bad(FileError err) {
+		return err != FileError::SUCCESS;
+	}
 }

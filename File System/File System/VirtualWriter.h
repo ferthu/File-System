@@ -8,7 +8,6 @@
 namespace file {
 
 	class VirtualWriter
-		: protected mf::BinaryWriter
 	{
 	public:
 		/* The custom std::streambuf
@@ -17,6 +16,10 @@ namespace file {
 		/* The read ostream construction
 		*/
 		std::ostream _stream;
+		/* The object for writing the data
+		*/
+		mf::BinaryWriter _writer;
+
 
 	public:
 		VirtualWriter(BlockDevice &device);
@@ -31,6 +34,12 @@ namespace file {
 		/* Write file data
 		*/
 		err::FileError writeFileData(const FileHeader& header, const char* file_data);
+		/* Write file
+		block	<<	Block for header data
+		file	<<	Header data to write
+		return	>>	Returns if any error occured.
+		*/
+		err::FileError writeFile(int block, const File& file);
 	};
 
 }

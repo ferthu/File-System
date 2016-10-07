@@ -26,15 +26,24 @@ namespace file {
 
 		/* Get the number of blocks required to hold a set of bytes
 		*/
-		int numBlocks(size_t bytes);
-		/* Get the number of blocks required to hold a file
+		unsigned int numBlocks(size_t bytes);
+
+		/* Writes a file object
 		*/
-		int numBlocks(const FileHeader& file);
+		err::FileError writeFile(File& file, FileReference& created_ref);
+
+		/* Release the allocated blocks in the vector until it is the size of numblocks
+		*/
+		void releaseExtra(int numblocks, std::vector<int>& blocks);
+		/* Allocate the extra blocks so the vector is the size of numblocks
+		*/
+		err::FileError allocateMore(int numblocks, std::vector<int>& blocks);
 
 	public:
 
 
 		BlockManager(unsigned int num_blocks = 512);
+
 
 		/*	Write a file 
 		name		<<	Name of the file

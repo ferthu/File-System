@@ -7,7 +7,6 @@
 namespace file {
 
 	class VirtualReader 
-		: protected mf::BinaryReader
 	{
 	private:
 		/* The custom std::streambuf
@@ -16,6 +15,9 @@ namespace file {
 		/* The read istream construction
 		*/
 		std::istream _stream;
+		/* The stream reader
+ 		*/
+		mf::BinaryReader _reader;
 
 	public:
 		VirtualReader(BlockDevice &device);
@@ -31,8 +33,11 @@ namespace file {
 
 		/* Read file data part
 		*/
-		err::FileError readFileData(const FileHeader& header, char* file_data);
+		err::FileError readFileData(const FileHeader& header, std::unique_ptr<char>& file_data);
 
+		/* Read entire file. Verifies it is readable
+		*/
+		err::FileError readFile(int block, File& file);
 
 	};
 
