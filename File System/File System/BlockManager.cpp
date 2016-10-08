@@ -21,52 +21,30 @@ namespace file {
 	unsigned int  BlockManager::numBlocks(size_t bytes) {
 		return (int)(bytes / _block_size + (bytes % (bytes + 1) > 0));
 	}
-	/* Release the extra blocks so the vector is of size numblocks
-	*/
-	void BlockManager::releaseExtra(int numblocks, std::vector<int>& blocks) {
-		//Release the extra blocks
-		for (unsigned int i = numblocks; i < blocks.size(); i++)
-			_owner->release(blocks[i]);
-		//Erase the blocks from the file
-		blocks.erase(blocks.begin() + numblocks, blocks.end());
-	}
-	/* Allocate the extra blocks so the vector is the size of numblocks
-	*/
-	err::FileError  BlockManager::allocateMore(int numblocks, std::vector<int>& blocks) {
-		std::vector<int> new_blocks;
-		err::FileError error = _owner->allocate(numblocks - blocks.size(), new_blocks);
-		//Verify no error allocating blocks
-		if (err::bad(error))
-			return error;
-		//Add blocks to the block vector
-		for (unsigned int i = 0; i < new_blocks.size(); i++)
-			blocks.push_back(new_blocks[i]);
-		return err::SUCCESS;
-	}
-	/* Helper function to separate a block for the header */
-	int extractHeadBlock(std::vector<int>& blocks) {
-		//Acquire the first buffer for the header
-		int head_block = blocks.begin()[0];
-		blocks.erase(blocks.begin());
-		return head_block;
-	}
 
-	/* Writes a file object
+
+	/* Writes a file object, changing the input variables ONLY if file was written successfully
+	file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.
+	created_ref	<>	File reference, receives the file if write was successfull. Ensured to be intact on failure.
 	*/
 	err::FileError BlockManager::writeFile(File& file, FileReference& created_ref) {
-		std::vector<int>& blocks = file._header._blocks;
+		std::vector<int> blocks;
 
 		//Allocate blocks for the header
 		err::FileError error = _owner->allocate(numBlocks(file._header._size) + 1, blocks);
 		if (!err::good(error))
 			return error;
 		//Extract a block for the header
-		int head_block = extractHeadBlock(file._header._blocks);
+		int head_block = extractHeadBlock(blocks);
+		//Swap in the allocated blocks
+		std::swap( blocks, file._header._blocks);
 
 		//Write header
 		VirtualWriter writer(_disk);
 		error = writer.writeFile(head_block, file);
 		if (err::bad(error)) {
+			//Swap back any previous block information
+			std::swap(file._header._blocks, blocks);
 			//Fail: release blocks (data remains but is not attached to the system)
 			_owner->release(blocks);
 			_owner->release(head_block);
@@ -77,15 +55,53 @@ namespace file {
 		created_ref._name = file._header._fileName;
 		return err::SUCCESS;
 	}
+	/* Overwrites a file reference while ensuring old file is intact if an error occured. Releases any extra blocks contained in file on success.  Same guarantee as writeFile(...).
+	file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.
+	created_ref	<>	File reference, receives the file if write was successfull. Ensured to be intact on failure.
+	*/
+	err::FileError BlockManager::overwriteFile(File& file, FileReference& file_ref) {
+
+		std::vector<int> old_blocks = file._header._blocks;
+		old_blocks.push_back(file_ref._block);
+
+		//Write the new file, ensuring that no state is changed on failure
+		err::FileError error = writeFile(file, file_ref);
+		//If bad error old file is still intact, return.
+		if (err::bad(error))
+			return error;
+		//Release old file
+		_owner->release(old_blocks);
+		return err::SUCCESS;
+	}
 	/*	Write a file
 	name		<<	Name of the file
 	data		<<	Data input for the file
 	created_ref	>>	Reference to the file created
 	return		>>	Returns if the file was created or if an error occured.
 	*/
-	err::FileError BlockManager::writeFile(const std::string& name, std::string& data, FileReference& created_ref) {
+	err::FileError BlockManager::writeFile(const std::string& name, const std::string& data, FileReference& created_ref) {
 		File file(name, 0, data);
 		return writeFile(file, created_ref);
+	}
+	/* Remove any data related to the file reference. Any data will be removed regardless if all information exists or not.
+	file	<<	File reference to be removed
+	return	>>	 Verifies file is writable and readable, or if reference pointed to a valid header. If another problem was found with the file reference, any relevant data is removed even on failure.
+	*/
+	err::FileError BlockManager::removeFile(const FileReference& file) {
+		VirtualReader reader(_disk);
+		FileHeader header;
+		reader.readHeader(file._block, header);
+		if (!header.isReadable())
+			return err::NO_READ_ACCESS;
+		if (!header.isWritable())
+			return err::NO_WRITE_ACCESS;
+		if (!header.isValidHeader())
+			return err::CORRUPTED_FILE;
+		//Release data
+		_owner->release(file._block);
+		_owner->release(header._blocks);
+
+		return err::SUCCESS;
 	}
 	/*	Read the data from a specified file
 	file	<<	Reference to the file to read from
@@ -128,7 +144,7 @@ namespace file {
 	data			<<	Data to write to the file
 	return			>>	Returns if the data was successfully written to the file or if an error occured.
 	*/
-	err::FileError BlockManager::overwriteFile(const FileReference& file_to_edit, const std::string& data) {
+	err::FileError BlockManager::overwriteFile(FileReference& file_to_edit, const std::string& data) {
 		
 		VirtualReader reader(_disk);
 		File file;
@@ -142,6 +158,11 @@ namespace file {
 
 		//Change file data
 		file.setData(data);
+		//Overwrite the file preserving old file on error
+		return overwriteFile(file, file_to_edit);
+#pragma region Deprecated: Append to old file
+		/*
+		Does not ensure last state is good
 
 		//Release or Allocate more blocks if needed
 		unsigned int numblocks = numBlocks(file._header._size);
@@ -158,14 +179,21 @@ namespace file {
 		//Overwrite the file
 		VirtualWriter writer(_disk);
 		return writer.writeFile(file_to_edit._block, file);
+		if (err::bad(error)) {
+
+			return error;
+		}
+		*/
+#pragma endregion
 	}
 	/* Appends from the first file to the other removing the first file.
 	from	<<	File to append to the other and remove when operation is complete
 	to		<<	Second file that the first file is appended to, reference remains constant
 	return	>>	If the data contained in the file was successfully appended.
 	*/
-	err::FileError BlockManager::appendFile(const FileReference& from, const FileReference& to) {
+	err::FileError BlockManager::appendFile(FileReference& from, FileReference& to) {
 		VirtualReader reader(_disk);
+		//File a is the appended file, b is deleted on success.
 		File file_a, file_b;
 		//Read the appended file
 		err::FileError error = reader.readFile(to._block, file_a);
@@ -180,19 +208,51 @@ namespace file {
 		if (err::bad(error))
 			return error;
 
-		//Append file
+		//Append file, adding occupied blocks and everything
 		file_a.append(file_b);
 
-		//Release extra blocks
-		unsigned int req_blocks = numBlocks(file_a._header._size);
-		releaseExtra(req_blocks, file_a._header._blocks);
+		//Overwrite the file preserving old file's on error
+		error = overwriteFile(file_a, to);
+		if (err::bad(error))
+			return error;
 
-		//Release the header block for file_b
+		//Clear deleted file header, the data blocks is appended to file_a and released on overwrite!
 		_owner->release(from._block);
+		from._block = -1;
+		from._name = "";
 
-		//Write the file
-		VirtualWriter writer(_disk);
-		return writer.writeFile(to._block, file_a);
+		return err::SUCCESS;
 	}
 
+#pragma region Deprecated
+	/* Release the extra blocks so the vector is of size numblocks
+	*/
+	void BlockManager::releaseExtra(int numblocks, std::vector<int>& blocks) {
+		//Release the extra blocks
+		for (unsigned int i = numblocks; i < blocks.size(); i++)
+			_owner->release(blocks[i]);
+		//Erase the blocks from the file
+		blocks.erase(blocks.begin() + numblocks, blocks.end());
+	}
+	/* Allocate the extra blocks so the vector is the size of numblocks
+	*/
+	err::FileError  BlockManager::allocateMore(int numblocks, std::vector<int>& blocks) {
+		std::vector<int> new_blocks;
+		err::FileError error = _owner->allocate(numblocks - blocks.size(), new_blocks);
+		//Verify no error allocating blocks
+		if (err::bad(error))
+			return error;
+		//Add blocks to the block vector
+		for (unsigned int i = 0; i < new_blocks.size(); i++)
+			blocks.push_back(new_blocks[i]);
+		return err::SUCCESS;
+	}
+	/* Helper function to separate a block for the header */
+	int extractHeadBlock(std::vector<int>& blocks) {
+		//Acquire the first buffer for the header
+		int head_block = blocks.begin()[0];
+		blocks.erase(blocks.begin());
+		return head_block;
+	}
+#pragma endregion
 }

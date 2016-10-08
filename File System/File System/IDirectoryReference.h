@@ -30,6 +30,10 @@ namespace file {
 		return		>>	Returns if file was successfully found or if an error occured.
 		*/
 		virtual err::FileError getFile(const std::string& name, FileReference& reference) = 0;
+		/* Add a file reference. If a reference with same name exists old reference is deleted.
+		ref		<<	Reference to the file
+		*/
+		virtual void addFile(const FileReference& ref) = 0;
 		/* Remove a file
 		ref		<<	Reference to the file
 		return	>>	Success if no error occured.

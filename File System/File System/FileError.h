@@ -15,7 +15,12 @@ namespace err {
 		/* Called if a specific file is not found in a directory
 		*/
 		FILE_NOT_FOUND = 3,
-
+		/* New file tried to be created with the same name as an existing file.
+		*/
+		FILE_ALREADY_EXIST = 4,
+		/* Occurs if error occured in file system. Where a non-existing file reference was sent to the manager.
+		*/
+		CORRUPTED_FILE = 5,
 
 		/* Stream is not opened or it is closed.
 		*/

@@ -35,6 +35,10 @@ namespace file {
 		err::FileError getError() {
 			return _error;
 		}
+
+		IDirectoryReference* operator->() {
+			return _directory;
+		}
 	};
 
 }

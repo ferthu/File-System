@@ -6,6 +6,8 @@
 
 namespace file {
 
+	/* Virtual file reader. Reades File data from the virtual stream.
+	*/
 	class VirtualReader 
 	{
 	private:
@@ -35,7 +37,7 @@ namespace file {
 		*/
 		err::FileError readFileData(const FileHeader& header, std::unique_ptr<char>& file_data);
 
-		/* Read entire file. Verifies it is readable
+		/* Read entire file. Verifies file data is readable.
 		*/
 		err::FileError readFile(int block, File& file);
 

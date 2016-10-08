@@ -66,6 +66,16 @@ namespace file {
 		}
 		return err::FILE_NOT_FOUND;
 	}
+	/* Add a file reference. If a reference with same name exists old reference is deleted.
+	ref		<<	Reference to the file
+	*/
+	void Directory::addFile(const FileReference& ref) {
+		FileReference tmp;
+		//Remove any existing file
+		removeFile(ref);
+		//Add new reference
+		_files.push_back(ref);
+	}
 	/* Remove a file
 	ref		<<	Reference to the file
 	return	>>	Success if no error occured.

@@ -7,6 +7,8 @@
 
 namespace file {
 
+	/* Virtual file write. Writes File data to the virtual stream.
+	*/
 	class VirtualWriter
 	{
 	public:
