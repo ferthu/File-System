@@ -11,6 +11,10 @@ namespace file {
 		: _disk(num_blocks)
 	{
 	}
+	BlockManager::BlockManager(BlockManager&& manager)
+		: _disk(std::move(manager._disk)), _owner(std::move(manager._owner)) {
+
+	}
 
 
 	BlockManager::~BlockManager()
@@ -223,6 +227,39 @@ namespace file {
 
 		return err::SUCCESS;
 	}
+	/* Write to stream
+	*/
+	void  BlockManager::writeToStream(mf::BinaryFileWriter& writer) {
+		std::vector<int> occupied = _owner->getOccupied();
+
+		//Write Owner....
+
+		for (int i = 0; i < occupied.size(); i++) {
+			writer.writeInt(occupied[i]);
+			Block& data = _disk[i];
+			writer.writePtr(data.begin(), data.size());
+		}
+	}
+	/* Read from stream.
+	*/
+	BlockManager  BlockManager::readFromStream(mf::BinaryFileReader& reader) {
+		BlockManager manager;
+
+		//Occupired blocks
+		std::vector<int> occupied;
+
+		for (int i = 0; i < occupied.size(); i++) {
+			int block_num = reader.readInt();
+			occupied.push_back(block_num);
+			size_t size;
+			char* ptr = reader.readPtr<char>(size);
+			manager._disk.writeBlock(block_num, ptr);
+			delete[] ptr;
+		}
+		//Initiate block owner
+		manager._owner->occupy(occupied);
+		return manager;
+	}
 
 #pragma region Deprecated
 	/* Release the extra blocks so the vector is of size numblocks
@@ -248,7 +285,7 @@ namespace file {
 		return err::SUCCESS;
 	}
 	/* Helper function to separate a block for the header */
-	int extractHeadBlock(std::vector<int>& blocks) {
+	int BlockManager::extractHeadBlock(std::vector<int>& blocks) {
 		//Acquire the first buffer for the header
 		int head_block = blocks.begin()[0];
 		blocks.erase(blocks.begin());

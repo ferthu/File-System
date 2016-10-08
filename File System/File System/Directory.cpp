@@ -105,4 +105,36 @@ namespace file {
 			names[i] = _directories[i]->_name;
 		return names;
 	}
+
+
+	/* Writer to stream
+	*/
+	void Directory::writeToStream(mf::BinaryFileWriter& writer) {
+		writer.writeString(_name);
+
+		//Write file references
+		writer.writeUInt((unsigned int)_files.size());
+		for (int i = 0; i < _files.size(); i++) {
+			writer.writeString(_files[i]._name);
+			writer.writeInt(_files[i]._block);
+		}
+		//Write directories
+		writer.writeUInt((unsigned int)_directories.size());
+		for (int i = 0; i < _files.size(); i++)
+			_directories[i]->writeToStream(writer);
+	}
+	std::unique_ptr<Directory> Directory::readFromStream(mf::BinaryFileReader& reader) {
+
+		std::string name = reader.readString();
+		std::unique_ptr<Directory> dir(new Directory(name));
+		//Read files
+		unsigned int fileNum = reader.readUInt();
+		for (unsigned int i = 0; i < fileNum; i++)
+			dir->addFile(FileReference(reader.readString(), reader.readInt()));
+		//Read child directories
+		unsigned int dirNum = reader.readUInt();
+		for (unsigned int i = 0; i < dirNum; i++)
+			dir->addDirectory(readFromStream(reader));
+		return std::move(dir);
+	}
 }

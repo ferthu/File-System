@@ -7,7 +7,7 @@ namespace file {
 	}
 
 	File::File(const std::string& name, char access, const std::string& data)
-	: _header(name, access, data.size()) , _data() {
+	: _header(name, access, (unsigned int)data.size()) , _data() {
 		setData(data);
 	}
 
@@ -17,7 +17,7 @@ namespace file {
 	/* Set the data in the file
 	*/
 	void File::setData(const std::string& data) {
-		_header._size = data.size();
+		_header._size = (unsigned int)data.size();
 		_data = std::unique_ptr<char>(new char[data.size()]);
 		std::memcpy(_data.get(), data.data(), data.size());
 	}

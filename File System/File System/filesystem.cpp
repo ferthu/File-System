@@ -1,10 +1,17 @@
 #include "filesystem.h"
 
+#include"BinaryFileWriter.h"
+#include"BinaryFileReader.h"
+
 FileSystem::FileSystem()
 	: _root(std::unique_ptr<file::Directory>(new file::Directory("Root"))), _manager() {
 
 }
 
+FileSystem::FileSystem(file::DirectoryTree& tree, file::BlockManager& manager)
+ : _root(std::move(tree)), _manager(std::move(manager)) {
+
+}
 FileSystem::~FileSystem() {
 
 }
@@ -167,12 +174,28 @@ err::FileError FileSystem::copy(const std::vector<std::string>& from_dir, const 
 /* Write the file system as an image from the disk
 */
 void FileSystem::writeImage(const std::string& name) {
+	mf::BinaryFileWriter writer;
+
+	if (writer.openFile(name)) {
+		//Write directory tree
+		_root.writeToStream(writer);
+		//Write block manager
+		_manager.writeToStream(writer);
+	}
 	return;
 }
 /* Read a copy of the file system from an image on the disk.
 */
-FileSystem* FileSystem::readImage(const std::string& name) {
-	return nullptr;
+std::unique_ptr<FileSystem> FileSystem::readImage(const std::string& name) {
+	mf::BinaryFileReader reader;
+	if (reader.openFile(name)) {
+		//Read directory tree
+		file::DirectoryTree root = file::DirectoryTree::readFromStream(reader);
+		//Read block manager
+		file::BlockManager manager = file::BlockManager::readFromStream(reader);
+		return std::unique_ptr<FileSystem>(new FileSystem(root, manager));
+	}
+	return std::unique_ptr<FileSystem>();
 }
 
 #pragma endregion

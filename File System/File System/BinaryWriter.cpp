@@ -33,9 +33,8 @@ namespace mf{
 
 	}
 	void BinaryWriter::writeString(const std::string &value){
-		int length = value.length();
-		_stream.write((char*)(&length), sizeof(int));
-		_stream.write(value.c_str(), sizeof(char)* length);
+		writeUInt((unsigned int)value.length());
+		_stream.write(value.c_str(), sizeof(char)* value.length());
 	}
 
 

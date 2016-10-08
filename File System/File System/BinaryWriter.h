@@ -72,7 +72,7 @@ namespace mf{
 	*/
 	template <class Element>
 	void BinaryWriter::writePtr(const Element* value, size_t size) {
-		writeUInt(size);
+		writeUInt((unsigned int)size);
 		_stream.write(reinterpret_cast<const char*>(value), size);
 	}
 }

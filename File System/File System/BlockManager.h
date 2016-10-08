@@ -7,6 +7,10 @@
 #include<memory>
 #include"IBlockOwner.h"
 #include"File.h"
+#include"BinaryFileReader.h"
+#include"BinaryFileWriter.h"
+
+
 namespace file {
 
 	/* Block manager takes care of the entire management of the data stored on the virtual disk.
@@ -27,6 +31,9 @@ namespace file {
 		/* Get the number of blocks required to hold a set of bytes
 		*/
 		unsigned int numBlocks(size_t bytes);
+		/* Removes a block identifier from the vector and returns it. 
+		*/
+		int extractHeadBlock(std::vector<int>& blocks);
 
 		/* Writes a file object, changing the input variables ONLY if file was written successfully
 		file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.
@@ -50,12 +57,15 @@ namespace file {
 
 #pragma endregion
 
+		BlockManager(const BlockManager& manager) = delete;
+		BlockManager& operator=(const BlockManager& manager) = delete;
 	public:
 
 
 		BlockManager(unsigned int num_blocks = 512);
+		BlockManager(BlockManager&& manager);
 
-
+		virtual ~BlockManager();
 		/*	Write a file 
 		name		<<	Name of the file
 		data		<<	Data input for the file
@@ -95,7 +105,15 @@ namespace file {
 		*/
 		err::FileError removeFile(const FileReference& file);
 
-		virtual ~BlockManager();
+
+		/* Write to stream
+		*/
+		void writeToStream(mf::BinaryFileWriter& writer);
+		/* Read from stream.
+		*/
+		static BlockManager readFromStream(mf::BinaryFileReader& reader);
+
+
 	};
 
 }

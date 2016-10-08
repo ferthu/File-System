@@ -15,6 +15,7 @@ private:
     // Here you can add your own data structures
 public:
     FileSystem();
+	FileSystem(file::DirectoryTree& tree, file::BlockManager& manager);
     ~FileSystem();
 
     /* These commands needs to implemented
@@ -65,7 +66,7 @@ public:
 	void writeImage(const std::string& name);
 	/* Read a copy of the file system from an image on the disk.
 	*/
-	static FileSystem* readImage(const std::string& name);
+	static std::unique_ptr<FileSystem> readImage(const std::string& name);
 
     /* Add your own member-functions if needed */
 };

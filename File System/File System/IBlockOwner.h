@@ -33,6 +33,13 @@ namespace file {
 		*/
 		virtual err::FileError release(const std::vector<int>& block_num) = 0;
 
+		/* Force allocate a set of blocks.
+		*/
+		virtual void occupy(const std::vector<int>& blocks) = 0;
+
+		/* Get indices for all allocated blocks
+		*/
+		virtual std::vector<int> getOccupied() = 0;
 
 		/*	Get the number of free memory blocks
 		*/

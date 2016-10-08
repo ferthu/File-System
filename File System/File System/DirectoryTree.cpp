@@ -3,11 +3,21 @@
 
 namespace file {
 
-	DirectoryTree::DirectoryTree(std::unique_ptr<Directory> root)
+	DirectoryTree::DirectoryTree(std::unique_ptr<Directory>& root)
 		: _root(std::move(root))
 	{
 	}
+	DirectoryTree::DirectoryTree(DirectoryTree&& root)
+		: _root(std::move(root._root)) {
 
+	}
+
+	DirectoryTree& DirectoryTree::operator=(DirectoryTree&& move) {
+		if (this == &move)
+			return *this;
+		_root = std::move(move._root);
+		return *this;
+	}
 
 	DirectoryTree::~DirectoryTree()
 	{
@@ -28,4 +38,14 @@ namespace file {
 		return _root->accessDirectory(directory, lvl);
 	}
 
+	/* Write to stream
+	*/
+	void DirectoryTree::writeToStream(mf::BinaryFileWriter& writer) {
+		_root->writeToStream(writer);
+	}
+	/* Read from stream
+	*/
+	DirectoryTree DirectoryTree::readFromStream(mf::BinaryFileReader& reader) {
+		return DirectoryTree(Directory::readFromStream(reader));
+	}
 }

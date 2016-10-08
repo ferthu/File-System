@@ -47,8 +47,7 @@ namespace mf {
 
 	}
 	std::string BinaryReader::readString() {
-		int length;
-		_stream.read((char*)(&length), sizeof(int));
+		unsigned int length = readUInt();
 		char *strArray = new char[length + 1];
 		_stream.read((char*)(strArray), sizeof(char)* length);
 		strArray[length] = STRINGEND;

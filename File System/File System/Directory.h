@@ -7,6 +7,8 @@
 #include<memory>
 #include"FileReference.h"
 #include"IDirectoryReference.h"
+#include"BinaryFileReader.h"
+#include"BinaryFileWriter.h"
 
 namespace file {
 
@@ -63,6 +65,14 @@ namespace file {
 		/* Get the names of the child directories
 		*/
 		virtual std::vector<std::string> getDirectoryNames();
+
+
+		/* Write directory to stream
+		*/
+		void writeToStream(mf::BinaryFileWriter& writer);
+		/* Read a Directory element from the stream
+		*/
+		static std::unique_ptr<Directory> readFromStream(mf::BinaryFileReader& reader);
 	};
 
 }
