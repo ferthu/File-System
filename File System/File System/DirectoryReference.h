@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 class DirectoryReference
 {
@@ -29,6 +30,9 @@ public:
 
 	// removes one folder from directory
 	void removeDirectory();
+
+	// << operator overload
+	friend std::ostream& operator<<(std::ostream& os, const DirectoryReference& dr);
 };
 
 #endif

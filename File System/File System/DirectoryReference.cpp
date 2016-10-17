@@ -110,3 +110,22 @@ void DirectoryReference::removeDirectory()
 
 DirectoryReference::DirectoryReference() {}
 DirectoryReference::~DirectoryReference() {}
+
+std::ostream& operator<<(std::ostream& os, const DirectoryReference& dr)
+{
+	int size = dr.directory.size();
+
+	if (size < 1)
+	{
+		os << dr.delimChar;
+	}
+	else
+	{
+		for (int i = 0; i < size; i++)
+		{
+			os << dr.delimChar << dr.directory[i];
+		}
+	}
+
+	return os;
+}

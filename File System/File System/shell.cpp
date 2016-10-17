@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "filesystem.h"
+#include "DirectoryReference.h"
 
 const int MAXCOMMANDS = 8;
 const int NUMAVAILABLECOMMANDS = 15;
@@ -19,7 +20,7 @@ int main(void) {
 
 	std::string userCommand, commandArr[MAXCOMMANDS];
 	std::string user = "user@DV1492";    // Change this if you want another user to be displayed
-	std::string currentDir = "/";    // current directory, used for output
+	DirectoryReference currentDir;    // current directory
 
     bool bRun = true;
 

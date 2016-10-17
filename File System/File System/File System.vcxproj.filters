@@ -87,9 +87,6 @@
     <ClCompile Include="FileSystemHandle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BinaryReader.cpp">
       <Filter>Source Files\Stream</Filter>
     </ClCompile>
@@ -163,9 +160,6 @@
     </ClInclude>
     <ClInclude Include="FileSystemHandle.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="BinaryReader.h">
       <Filter>Header Files\Stream</Filter>

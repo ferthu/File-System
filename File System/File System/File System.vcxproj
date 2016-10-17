@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.cpp" />
     <ClCompile Include="BinaryFileReader.cpp" />
     <ClCompile Include="BinaryFileWriter.cpp" />
     <ClCompile Include="BinaryReader.cpp" />
@@ -48,7 +47,6 @@
     <ClCompile Include="VirtualWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Programmering C\MyFunctions\MyFunctions\RawStream.h" />
     <ClInclude Include="BinaryFileReader.h" />
     <ClInclude Include="BinaryFileWriter.h" />
     <ClInclude Include="BinaryReader.h" />
