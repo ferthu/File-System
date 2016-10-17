@@ -4,7 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 
-const std::vector<std::string>& DirectoryReference::getDirectory()
+const std::vector<std::string>& DirectoryReference::getDirectory() const
 {
 	return directory;
 }

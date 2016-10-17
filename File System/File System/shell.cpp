@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "filesystem.h"
+#include "FileError.h"
 #include "DirectoryReference.h"
 
 const int MAXCOMMANDS = 8;
@@ -15,12 +16,15 @@ std::string availableCommands[NUMAVAILABLECOMMANDS] = {
 int parseCommandString(const std::string &userCommand, std::string strArr[]);
 int findCommand(std::string &command);
 std::string help();
+void listDirectory(const DirectoryReference& currentDir, const FileSystem& fs);
+void createFolder(const std::vector<std::string>& directory, const std::string& folder_name, FileSystem& fs);
 
 int main(void) {
 
 	std::string userCommand, commandArr[MAXCOMMANDS];
-	std::string user = "user@DV1492";    // Change this if you want another user to be displayed
-	DirectoryReference currentDir;    // current directory
+	std::string user = "user@DV1492";   // Change this if you want another user to be displayed
+	FileSystem fileSystem;
+	DirectoryReference currentDir;		// current directory
 
     bool bRun = true;
 
@@ -42,8 +46,7 @@ int main(void) {
                 // Call fileSystem.format()
                 break;
             case 2: // ls
-                std::cout << "Listing directory" << std::endl;
-                // Call filesystem.ls()
+				listDirectory(currentDir, fileSystem);
                 break;
             case 3: // create
                 break;
@@ -62,6 +65,7 @@ int main(void) {
             case 10: // mv
                 break;
             case 11: // mkdir
+				createFolder(currentDir.getDirectory(), commandArr[1], fileSystem);
                 break;
             case 12: // cd
                 break;
@@ -121,4 +125,37 @@ std::string help() {
     helpStr += "* pwd:                              Get current working directory\n";
     helpStr += "* help:                             Prints this help screen\n";
     return helpStr;
+}
+
+void listDirectory(const DirectoryReference& currentDir, const FileSystem& fs)
+{
+	std::vector<std::string> list;
+	err::FileError err = fs.listDir(currentDir.getDirectory(), list);
+
+	if (err::good(err))
+	{
+		std::cout << "Listing directory" << std::endl;
+
+		int size = list.size();
+
+		for (int i = 0; i < size; i++)
+		{
+			std::cout << list[i] << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << "Error listing files, error: " << err << std::endl;
+	}
+}
+
+void createFolder(const std::vector<std::string>& directory, const std::string& folder_name, FileSystem& fs)
+{
+	err::FileError err = fs.createFolder(directory, folder_name);
+
+	if (err::bad(err))
+	{
+		std::cout << "Error creating folder, error: " << err << std::endl;
+	}
+
 }

@@ -20,7 +20,7 @@ public:
 	~DirectoryReference();
 
 	// returns stored directory
-	const std::vector<std::string>& getDirectory();
+	const std::vector<std::string>& getDirectory() const;
 
 	// creates and stores a directory from a string (relative or absolute)
 	void directoryFromString(const std::string str);

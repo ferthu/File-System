@@ -35,7 +35,7 @@ err::FileError FileSystem::removeFolder(const std::vector<std::string>& director
 	return dir.getError();
 }
 /* This function will get all the files and folders in the specified folder */
-err::FileError FileSystem::listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) {
+err::FileError FileSystem::listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) const {
 	file::DirectoryAccess dir = _root.accessDirectory(directory);
 	if (dir.access()) {
 		std::vector<std::string> tmp;
@@ -44,7 +44,7 @@ err::FileError FileSystem::listDir(const std::vector<std::string>& directory, st
 		list.assign(tmp.begin(), tmp.end());
 		//Get files
 		tmp = dir->getFileNames();
-		list.assign(tmp.begin(), tmp.end());
+		list.insert(list.begin(), tmp.begin(), tmp.end());
 		return err::SUCCESS;
 	}
 	return dir.getError();

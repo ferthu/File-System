@@ -102,7 +102,10 @@ namespace file {
 	std::vector<std::string> Directory::getDirectoryNames() {
 		std::vector<std::string> names(_directories.size());
 		for (size_t i = 0; i < _directories.size(); i++)
+		{
 			names[i] = _directories[i]->_name;
+			names[i].append("/");
+		}
 		return names;
 	}
 
