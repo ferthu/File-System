@@ -13,6 +13,7 @@ private:
 	std::vector<std::string> directory;
 	const unsigned int directoryMaxLength = 100;
 	const char delimChar = '/';
+	const char specialReferenceChar = '.';
 public:
 	DirectoryReference();
 	~DirectoryReference();

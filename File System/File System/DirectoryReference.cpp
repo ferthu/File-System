@@ -17,12 +17,37 @@ void DirectoryReference::directoryFromString(const std::string str)
 
 	if (input.good())
 	{
+		// absolute path
 		if (input.peek() == delimChar)
 		{
-			// absolute path
+			addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+		}
+		// reference to current or parent directory
+		else if (input.peek() == specialReferenceChar)
+		{
+			// remove first dot
 			input.get();
 
-			addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+			// two dots reference parent directory
+			if (input.peek() == specialReferenceChar)
+			{
+				// remove dot
+				input.get();
+
+				newDirectory = directory;
+
+				// remove lowest directory to obtain parent
+				newDirectory.pop_back();
+
+				addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+			}
+			// one dot references current directory
+			else
+			{
+				newDirectory = directory;
+
+				addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+			}
 		}
 		else
 		{
@@ -54,6 +79,10 @@ void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std
 
 	while (toAdd.good())
 	{
+		// remove delim character
+		if(toAdd.peek() == delim)
+			toAdd.get();
+
 		toAdd.get(dir, dirMaxSize, delim);
 
 		// TODO: check if directory exists
@@ -78,3 +107,6 @@ void DirectoryReference::removeDirectory()
 {
 	directory.pop_back();
 }
+
+DirectoryReference::DirectoryReference() {}
+DirectoryReference::~DirectoryReference() {}
