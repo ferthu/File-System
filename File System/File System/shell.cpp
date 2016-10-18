@@ -68,6 +68,18 @@ int main(void) {
 				createFolder(currentDir.getDirectory(), commandArr[1], fileSystem);
                 break;
             case 12: // cd
+				try
+				{
+					currentDir.directoryFromString(commandArr[1], fileSystem);
+				}
+				catch (err::FileError e)
+				{
+					std::cout << "File error: " << e << std::endl;
+				}
+				catch (const std::invalid_argument& e)
+				{
+					std::cout << e.what();
+				}
                 break;
             case 13: // pwd
                 break;

@@ -9,7 +9,7 @@ const std::vector<std::string>& DirectoryReference::getDirectory() const
 	return directory;
 }
 
-void DirectoryReference::directoryFromString(const std::string str)
+void DirectoryReference::directoryFromString(const std::string& str, const FileSystem& fs)
 {
 	std::stringstream input(str);
 
@@ -20,33 +20,37 @@ void DirectoryReference::directoryFromString(const std::string str)
 		// absolute path
 		if (input.peek() == delimChar)
 		{
-			addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+			addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
 		}
 		// reference to current or parent directory
 		else if (input.peek() == specialReferenceChar)
 		{
 			// remove first dot
-			input.get();
+			removeCharacter(input, specialReferenceChar);
 
 			// two dots reference parent directory
 			if (input.peek() == specialReferenceChar)
 			{
 				// remove dot
-				input.get();
+				removeCharacter(input, specialReferenceChar);
 
 				newDirectory = directory;
 
 				// remove lowest directory to obtain parent
-				newDirectory.pop_back();
+				if (newDirectory.size() > 0)
+					newDirectory.pop_back();
 
-				addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+				addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
+
 			}
 			// one dot references current directory
 			else
 			{
+				removeCharacter(input, delimChar);
+
 				newDirectory = directory;
 
-				addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+				addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
 			}
 		}
 		else
@@ -54,8 +58,10 @@ void DirectoryReference::directoryFromString(const std::string str)
 			// relative path
 			newDirectory = directory;
 
-			addToDirectory(newDirectory, input, delimChar, directoryMaxLength);
+			addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
 		}
+
+		directory = newDirectory;
 	}
 	else
 	{
@@ -73,27 +79,49 @@ void DirectoryReference::reportStreamError(const std::stringstream& stream)
 		throw std::invalid_argument("Error: string error\n");
 }
 
-void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize)
+void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize, const FileSystem& fs)
 {
-	char* dir = new char[dirMaxSize];
+	if (toAdd.peek() == -1)
+		return;
 
-	while (toAdd.good())
+	if (toAdd.good())
 	{
-		// remove delim character
-		if(toAdd.peek() == delim)
-			toAdd.get();
+		char* dir = new char[dirMaxSize];
 
-		toAdd.get(dir, dirMaxSize, delim);
+		while (toAdd.good())
+		{
+			// remove delim character
+			removeCharacter(toAdd, delimChar);
 
-		// TODO: check if directory exists
+			if (toAdd.good())
+			{
+				toAdd.get(dir, dirMaxSize, delim);
 
-		directory.push_back(std::string(dir));
+				// check if directory exists
+				std::vector<std::string> dirs;
+
+				err::FileError err;
+				if (err::good(err = fs.listDirOnly(directory, dirs)))
+				{
+					if (std::find(dirs.begin(), dirs.end(), dir) != dirs.end())
+					{
+						directory.push_back(std::string(dir));
+					}
+					else
+						throw std::invalid_argument("Error: directory not found\n");
+				}
+				else
+					throw err;
+			}
+		}
+
+		delete[] dir;
+
+		if (!toAdd.eof())
+			throw std::invalid_argument("Error: string error\n");
 	}
-
-	delete[] dir;
-
-	if (!toAdd.eof())
-		throw std::invalid_argument("Error: string error\n");
+	else
+		throw std::invalid_argument("Error: addToDirectory received bad input\n");
 }
 
 void DirectoryReference::addDirectory(const std::string str)
@@ -105,7 +133,8 @@ void DirectoryReference::addDirectory(const std::string str)
 
 void DirectoryReference::removeDirectory()
 {
-	directory.pop_back();
+	if (!directory.empty())
+		directory.pop_back();
 }
 
 DirectoryReference::DirectoryReference() {}
@@ -128,4 +157,18 @@ std::ostream& operator<<(std::ostream& os, const DirectoryReference& dr)
 	}
 
 	return os;
+}
+
+bool DirectoryReference::removeCharacter(std::stringstream& stream, char c)
+{
+	if (stream.peek() == c)
+	{
+		stream.get();
+
+		if (stream.peek() == -1)
+			stream.get();
+
+		return true;
+	}
+	return false;
 }

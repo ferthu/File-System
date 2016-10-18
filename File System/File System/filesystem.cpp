@@ -42,9 +42,27 @@ err::FileError FileSystem::listDir(const std::vector<std::string>& directory, st
 		//Get directories
 		tmp = dir->getDirectoryNames();
 		list.assign(tmp.begin(), tmp.end());
+
+		// add slash to separate files from directories
+		for (int i = 0; i < list.size(); i++)
+			list[i].append("/");
+
 		//Get files
 		tmp = dir->getFileNames();
 		list.insert(list.begin(), tmp.begin(), tmp.end());
+		return err::SUCCESS;
+	}
+	return dir.getError();
+}
+
+err::FileError FileSystem::listDirOnly(const std::vector<std::string>& directory, std::vector<std::string>& list) const
+{
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	if (dir.access()) {
+		std::vector<std::string> tmp;
+		//Get directories
+		tmp = dir->getDirectoryNames();
+		list.assign(tmp.begin(), tmp.end());
 		return err::SUCCESS;
 	}
 	return dir.getError();

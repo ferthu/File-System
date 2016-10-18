@@ -44,6 +44,10 @@ public:
 	*/
     err::FileError listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) const;
 
+	/* This function will get all the folders in the specified folder
+	*/
+	err::FileError listDirOnly(const std::vector<std::string>& directory, std::vector<std::string>& list) const;
+
 	/* Append file data from a file to the end of another. Removing file that is appended to the other.
 	from_dir	<<	Directory of the file to append.
 	from_name	<<	Name of the file to be appended, removed on success.
