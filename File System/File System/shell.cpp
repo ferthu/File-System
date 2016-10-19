@@ -3,6 +3,7 @@
 #include "filesystem.h"
 #include "FileError.h"
 #include "DirectoryReference.h"
+#include"FileSystemHandle.h"
 
 const int MAXCOMMANDS = 8;
 const int NUMAVAILABLECOMMANDS = 15;
@@ -16,20 +17,16 @@ std::string availableCommands[NUMAVAILABLECOMMANDS] = {
 int parseCommandString(const std::string &userCommand, std::string strArr[]);
 int findCommand(std::string &command);
 std::string help();
-void listDirectory(const DirectoryReference& currentDir, const FileSystem& fs);
-void createFolder(const std::vector<std::string>& directory, const std::string& folder_name, FileSystem& fs);
 
 int main(void) {
 
 	std::string userCommand, commandArr[MAXCOMMANDS];
 	std::string user = "user@DV1492";   // Change this if you want another user to be displayed
-	FileSystem fileSystem;
-	DirectoryReference currentDir;		// current directory
-
+	file::FileSystemHandle _handle;
     bool bRun = true;
 
     do {
-        std::cout << user << ":" << currentDir << "$ ";
+        std::cout << user << ":" << _handle << "$ ";
         getline(std::cin, userCommand);
 
         int nrOfCommands = parseCommandString(userCommand, commandArr);
@@ -46,7 +43,7 @@ int main(void) {
                 // Call fileSystem.format()
                 break;
             case 2: // ls
-				listDirectory(currentDir, fileSystem);
+				_handle.listDirectory();
                 break;
             case 3: // create
                 break;
@@ -65,21 +62,10 @@ int main(void) {
             case 10: // mv
                 break;
             case 11: // mkdir
-				createFolder(currentDir.getDirectory(), commandArr[1], fileSystem);
+				_handle.createFolder(commandArr[1]);
                 break;
             case 12: // cd
-				try
-				{
-					currentDir.directoryFromString(commandArr[1], fileSystem);
-				}
-				catch (err::FileError e)
-				{
-					std::cout << "File error: " << e << std::endl;
-				}
-				catch (const std::invalid_argument& e)
-				{
-					std::cout << e.what();
-				}
+				_handle.cd(commandArr[1]);
                 break;
             case 13: // pwd
                 break;
@@ -139,35 +125,3 @@ std::string help() {
     return helpStr;
 }
 
-void listDirectory(const DirectoryReference& currentDir, const FileSystem& fs)
-{
-	std::vector<std::string> list;
-	err::FileError err = fs.listDir(currentDir.getDirectory(), list);
-
-	if (err::good(err))
-	{
-		std::cout << "Listing directory" << std::endl;
-
-		int size = list.size();
-
-		for (int i = 0; i < size; i++)
-		{
-			std::cout << list[i] << std::endl;
-		}
-	}
-	else
-	{
-		std::cout << "Error listing files, error: " << err << std::endl;
-	}
-}
-
-void createFolder(const std::vector<std::string>& directory, const std::string& folder_name, FileSystem& fs)
-{
-	err::FileError err = fs.createFolder(directory, folder_name);
-
-	if (err::bad(err))
-	{
-		std::cout << "Error creating folder, error: " << err << std::endl;
-	}
-
-}
