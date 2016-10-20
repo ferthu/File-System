@@ -27,9 +27,19 @@ namespace file {
 		/* Create a file
 		*/
 		void createFile(const std::string& file_name, const std::string& data);
+		/* Remove a file
+		*/
+		void removeFile(const std::string& file_name);
 		/* Get the data in a file
 		*/
 		void printFile(const std::string& file_name);
+		/* Copies a file from a directory to another
+		*/
+		void copyFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
+
+		/* Empties file system
+		*/
+		void format();
 
 		/* Output working directory to the stream
 		*/

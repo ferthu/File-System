@@ -75,6 +75,10 @@ public:
 	*/
 	static std::unique_ptr<FileSystem> readImage(const std::string& name);
 
+	/* Removes all files and directories
+	*/
+	void format();
+
     /* Add your own member-functions if needed */
 };
 

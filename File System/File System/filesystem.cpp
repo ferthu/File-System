@@ -235,3 +235,9 @@ std::unique_ptr<FileSystem> FileSystem::readImage(const std::string& name) {
 }
 
 #pragma endregion
+
+void FileSystem::format()
+{
+	_root.format();
+	_manager.format();
+}

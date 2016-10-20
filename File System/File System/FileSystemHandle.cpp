@@ -28,6 +28,16 @@ namespace file {
 			std::cout << "Error creating file, error: " << err << std::endl;
 		}
 	}
+	/* Remove a file
+	*/
+	void FileSystemHandle::removeFile(const std::string& file_name)
+	{
+		err::FileError err = _sys.removeFile(_dir.getDirectory(), file_name);
+		if (err::bad(err))
+		{
+			std::cout << "Error removing file, error: " << err << std::endl;
+		}
+	}
 	/* Get the data in a file
 	*/
 	void FileSystemHandle::printFile(const std::string& file_name) {
@@ -38,6 +48,31 @@ namespace file {
 		else 
 			std::cout << "Error couldn't access file: " << err << std::endl;
 	}
+	
+	void FileSystemHandle::copyFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName)
+	{
+		DirectoryReference source;
+		DirectoryReference target;
+
+		source.directoryFromString(sourceDirectory, _sys);
+		target.directoryFromString(targetDirectory, _sys);
+
+		std::string fileContents;
+		err::FileError err = _sys.getFile(source.getDirectory(), sourceFileName, fileContents);
+		if (err::good(err))
+		{
+			err = _sys.createFile(target.getDirectory(), targetFileName, fileContents);
+			if (err::bad(err))
+			{
+				std::cout << "Error copying file: " << err << std::endl;
+			}
+		}
+		else
+		{
+			std::cout << "Error reading file: " << err << std::endl;
+		}
+	}
+
 	void FileSystemHandle::listDirectory() {
 		std::vector<std::string> list;
 		err::FileError err = _sys.listDir(_dir.getDirectory(), list);
@@ -72,6 +107,13 @@ namespace file {
 			std::cout << e.what();
 		}
 	}
+
+	void FileSystemHandle::format()
+	{
+		_dir.format();
+		_sys.format();
+	}
+
 	std::ostream& operator<<(std::ostream& os, const FileSystemHandle& dr) {
 		os << dr._dir;
 		return os;

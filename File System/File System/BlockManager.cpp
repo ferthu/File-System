@@ -301,4 +301,11 @@ namespace file {
 		return head_block;
 	}
 #pragma endregion
+
+	void BlockManager::format()
+	{
+		_disk.reset();
+		_owner->format();
+	}
 }
+

@@ -40,7 +40,7 @@ int main(void) {
                 std::cout << "Exiting\n";
                 break;
             case 1: // format
-                // Call fileSystem.format()
+				_handle.format();
                 break;
             case 2: // ls
 				_handle.listDirectory();
@@ -58,8 +58,10 @@ int main(void) {
             case 6: // restoreImage
                 break;
             case 7: // rm
+				_handle.removeFile(commandArr[1]);
                 break;
             case 8: // cp
+				_handle.copyFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 9: // append
                 break;

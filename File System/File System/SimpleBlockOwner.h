@@ -68,6 +68,7 @@ namespace file {
 		/*	Get the number of free memory blocks
 		*/
 		virtual size_t free();
+
 	};
 
 }

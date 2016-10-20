@@ -37,6 +37,9 @@ public:
 
 	// removes next character from stringstream if it equals argument
 	bool removeCharacter(std::stringstream& stream, char c);
+
+	// resets directory
+	void format();
 };
 
 #endif

@@ -151,5 +151,4 @@ namespace file {
 	size_t SimpleBlockOwner::free() {
 		return _free.size();
 	}
-
 }

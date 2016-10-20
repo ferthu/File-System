@@ -48,4 +48,9 @@ namespace file {
 	DirectoryTree DirectoryTree::readFromStream(mf::BinaryFileReader& reader) {
 		return DirectoryTree(Directory::readFromStream(reader));
 	}
+
+	void DirectoryTree::format()
+	{
+		_root = std::unique_ptr<file::Directory>(new file::Directory("Root"));
+	}
 }

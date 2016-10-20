@@ -116,7 +116,9 @@ namespace file {
 		*/
 		static BlockManager readFromStream(mf::BinaryFileReader& reader);
 
-
+		/* Resets blocks
+		*/
+		void format();
 	};
 
 }

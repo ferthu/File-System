@@ -172,3 +172,8 @@ bool DirectoryReference::removeCharacter(std::stringstream& stream, char c)
 	}
 	return false;
 }
+
+void DirectoryReference::format()
+{
+	directory.clear();
+}

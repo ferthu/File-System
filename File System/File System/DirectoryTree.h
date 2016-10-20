@@ -42,6 +42,10 @@ namespace file {
 		/* Read from stream.
 		*/
 		static DirectoryTree readFromStream(mf::BinaryFileReader& reader);
+
+		/* Format directory tree
+		*/
+		void format();
 	};
 
 }
