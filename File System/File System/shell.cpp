@@ -64,6 +64,7 @@ int main(void) {
 				_handle.copyFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 9: // append
+				_handle.appendFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 10: // mv
                 break;

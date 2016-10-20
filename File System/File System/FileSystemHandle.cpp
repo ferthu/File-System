@@ -73,6 +73,46 @@ namespace file {
 		}
 	}
 
+	void FileSystemHandle::appendFile(const std::string& toAppendDirectory, const std::string& toAppendFileName, const std::string& appendDataDirectory, const std::string& appendDataFileName)
+	{
+		DirectoryReference toAppend;
+		DirectoryReference appendData;
+
+		toAppend.directoryFromString(toAppendDirectory, _sys);
+		appendData.directoryFromString(appendDataDirectory, _sys);
+
+		std::string originalContents;
+		std::string appendContents;
+
+		// read original file
+		err::FileError err = _sys.getFile(toAppend.getDirectory(), toAppendFileName, originalContents);
+		if (err::good(err))
+		{
+			// read append data
+			err::FileError err = _sys.getFile(appendData.getDirectory(), appendDataFileName, appendContents);
+			if (err::good(err))
+			{
+				// remove original file
+				err = _sys.removeFile(toAppend.getDirectory(), toAppendFileName);
+				if (err::good(err))
+				{
+					// create new appended file
+					std::string newContents = originalContents + appendContents;
+					err = _sys.createFile(toAppend.getDirectory(), toAppendFileName, newContents);
+					if (err::bad(err))
+						std::cout << "Error creating appended file, error: " << err << std::endl;
+				}
+				else
+					std::cout << "Error replacing file: " << err << std::endl;
+			}
+			else
+				std::cout << "Error reading second file: " << err << std::endl;
+		}
+		else
+			std::cout << "Error reading first file: " << err << std::endl;
+
+	}
+
 	void FileSystemHandle::listDirectory() {
 		std::vector<std::string> list;
 		err::FileError err = _sys.listDir(_dir.getDirectory(), list);

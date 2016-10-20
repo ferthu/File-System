@@ -37,6 +37,10 @@ namespace file {
 		*/
 		void copyFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
 
+		/* Appends a file to another
+		*/
+		void appendFile(const std::string& toAppendDirectory, const std::string& toAppendFileName, const std::string& appendDataDirectory, const std::string& appendDataFileName);
+
 		/* Empties file system
 		*/
 		void format();
