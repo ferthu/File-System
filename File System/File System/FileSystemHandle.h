@@ -41,6 +41,10 @@ namespace file {
 		*/
 		void appendFile(const std::string& toAppendDirectory, const std::string& toAppendFileName, const std::string& appendDataDirectory, const std::string& appendDataFileName);
 
+		/* Moves a file to another directory
+		*/
+		void moveFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
+
 		/* Empties file system
 		*/
 		void format();

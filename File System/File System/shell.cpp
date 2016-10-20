@@ -67,6 +67,7 @@ int main(void) {
 				_handle.appendFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 10: // mv
+				_handle.moveFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 11: // mkdir
 				_handle.createFolder(commandArr[1]);

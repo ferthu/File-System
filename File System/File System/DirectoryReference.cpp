@@ -9,7 +9,7 @@ const std::vector<std::string>& DirectoryReference::getDirectory() const
 	return directory;
 }
 
-void DirectoryReference::directoryFromString(const std::string& str, const FileSystem& fs)
+void DirectoryReference::directoryFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs)
 {
 	std::stringstream input(str);
 
@@ -34,7 +34,7 @@ void DirectoryReference::directoryFromString(const std::string& str, const FileS
 				// remove dot
 				removeCharacter(input, specialReferenceChar);
 
-				newDirectory = directory;
+				newDirectory = currentDirectory.getDirectory();
 
 				// remove lowest directory to obtain parent
 				if (newDirectory.size() > 0)
@@ -48,7 +48,7 @@ void DirectoryReference::directoryFromString(const std::string& str, const FileS
 			{
 				removeCharacter(input, delimChar);
 
-				newDirectory = directory;
+				newDirectory = currentDirectory.getDirectory();
 
 				addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
 			}
@@ -56,7 +56,7 @@ void DirectoryReference::directoryFromString(const std::string& str, const FileS
 		else
 		{
 			// relative path
-			newDirectory = directory;
+			newDirectory = currentDirectory.getDirectory();
 
 			addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
 		}

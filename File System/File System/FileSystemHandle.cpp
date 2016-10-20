@@ -54,8 +54,8 @@ namespace file {
 		DirectoryReference source;
 		DirectoryReference target;
 
-		source.directoryFromString(sourceDirectory, _sys);
-		target.directoryFromString(targetDirectory, _sys);
+		source.directoryFromString(_dir, sourceDirectory, _sys);
+		target.directoryFromString(_dir, targetDirectory, _sys);
 
 		std::string fileContents;
 		err::FileError err = _sys.getFile(source.getDirectory(), sourceFileName, fileContents);
@@ -78,8 +78,8 @@ namespace file {
 		DirectoryReference toAppend;
 		DirectoryReference appendData;
 
-		toAppend.directoryFromString(toAppendDirectory, _sys);
-		appendData.directoryFromString(appendDataDirectory, _sys);
+		toAppend.directoryFromString(_dir, toAppendDirectory, _sys);
+		appendData.directoryFromString(_dir, appendDataDirectory, _sys);
 
 		std::string originalContents;
 		std::string appendContents;
@@ -113,6 +113,20 @@ namespace file {
 
 	}
 
+	void FileSystemHandle::moveFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName)
+	{
+		copyFile(sourceDirectory, sourceFileName, targetDirectory, targetFileName);
+		
+		DirectoryReference sourceDir;
+		sourceDir.directoryFromString(_dir, sourceDirectory, _sys);
+
+		err::FileError err = _sys.removeFile(sourceDir.getDirectory(), sourceFileName);
+		if (err::bad(err))
+		{
+			std::cout << "Error removing file, error: " << err << std::endl;
+		}
+	}
+
 	void FileSystemHandle::listDirectory() {
 		std::vector<std::string> list;
 		err::FileError err = _sys.listDir(_dir.getDirectory(), list);
@@ -136,7 +150,7 @@ namespace file {
 	void FileSystemHandle::cd(const std::string& str) {
 		try
 		{
-			_dir.directoryFromString(str, _sys);
+			_dir.directoryFromString(_dir, str, _sys);
 		}
 		catch (err::FileError e)
 		{

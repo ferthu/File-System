@@ -24,7 +24,7 @@ public:
 	const std::vector<std::string>& getDirectory() const;
 
 	// creates and stores a directory from a string (relative or absolute)
-	void directoryFromString(const std::string& str, const FileSystem& fs);
+	void directoryFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs);
 
 	// adds folder named in string to directory
 	void addDirectory(const std::string str);
