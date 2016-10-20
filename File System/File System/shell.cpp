@@ -20,7 +20,7 @@ std::string help();
 
 int main(void) {
 
-	std::string userCommand, commandArr[MAXCOMMANDS];
+	std::string userCommand, tmp, commandArr[MAXCOMMANDS];
 	std::string user = "user@DV1492";   // Change this if you want another user to be displayed
 	file::FileSystemHandle _handle;
     bool bRun = true;
@@ -46,8 +46,12 @@ int main(void) {
 				_handle.listDirectory();
                 break;
             case 3: // create
+				std::cout << "Write file data:\n";
+				getline(std::cin, tmp);
+				_handle.createFile(commandArr[1], tmp);
                 break;
             case 4: // cat
+				_handle.printFile(commandArr[1]);
                 break;
             case 5: // createImage
                 break;

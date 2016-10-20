@@ -79,7 +79,7 @@ err::FileError FileSystem::createFile(const std::vector<std::string>& directory,
 		file::FileReference ref;
 		/* Verify that file does not already exist
 		*/
-		if (err::bad(dir->getFile(file_name, ref))) {
+		if (err::good(dir->getFile(file_name, ref))) {
 			/* Overwrite old file
 			*/
 			err::FileError error = _manager.overwriteFile(ref, data);
@@ -97,6 +97,24 @@ err::FileError FileSystem::createFile(const std::vector<std::string>& directory,
 			//Add the file
 			dir->addFile(ref);
 		}
+	}
+	return dir.getError();
+}
+/* This function creates a file in the filesystem
+*/
+err::FileError FileSystem::getFile(const std::vector<std::string>& directory, const std::string& file_name, std::string& data) {
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	if (dir.access()) {
+		//File reference operated on
+		file::FileReference ref;
+		/* Verify that file does not already exist
+		*/
+		err::FileError error = dir->getFile(file_name, ref);
+		if (err::good(error)) {
+			_manager.readFile(ref, data);
+			return err::SUCCESS;
+		}
+		return error;
 	}
 	return dir.getError();
 }

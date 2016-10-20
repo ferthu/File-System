@@ -2,13 +2,13 @@
 #include"BinaryWriter.h"
 #include"VirtualWriter.h"
 #include"VirtualReader.h"
-
+#include"SimpleBlockOwner.h"
 namespace file {
 
 
 
 	BlockManager::BlockManager(unsigned int num_blocks)
-		: _disk(num_blocks)
+		: _disk(num_blocks), _owner(new SimpleBlockOwner(num_blocks))
 	{
 	}
 	BlockManager::BlockManager(BlockManager&& manager)
@@ -19,6 +19,11 @@ namespace file {
 
 	BlockManager::~BlockManager()
 	{
+	}
+	/* Get the total number of blocks in manager.
+	*/
+	unsigned int BlockManager::blockSize() {
+		return _disk.size();
 	}
 	/* Get the number of blocks required to hold a set of bytes
 	*/
@@ -233,6 +238,7 @@ namespace file {
 		std::vector<int> occupied = _owner->getOccupied();
 
 		//Write Owner....
+		writer.writeUInt(blockSize());
 
 		for (int i = 0; i < occupied.size(); i++) {
 			writer.writeInt(occupied[i]);
@@ -243,7 +249,10 @@ namespace file {
 	/* Read from stream.
 	*/
 	BlockManager  BlockManager::readFromStream(mf::BinaryFileReader& reader) {
-		BlockManager manager;
+
+		//Read block size and initiate
+		unsigned int block_size = reader.readUInt();
+		BlockManager manager(block_size);
 
 		//Occupired blocks
 		std::vector<int> occupied;

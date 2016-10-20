@@ -27,8 +27,8 @@ namespace file {
 		_writer.writeChar(header._access);
 		_writer.writeString(header._fileName);
 		_writer.writeUInt(header._size);
-		_writer.writeVector(header._blocks);
-		return _streambuf.getErr();
+		_writer.writeVector<int>(header._blocks);
+		return _streambuf.close();
 	}
 
 	/* Read a file
@@ -39,7 +39,7 @@ namespace file {
 			return error;
 		//Write file data
 		_writer.writeArray(file_data, header._size);
-		return _streambuf.getErr();
+		return _streambuf.close();
 	}
 	err::FileError VirtualWriter::writeFile(int block, const File& file) {
 		err::FileError error = writeHeader(block, file._header);

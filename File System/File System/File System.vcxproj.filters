@@ -108,6 +108,9 @@
     <ClCompile Include="VirtualWriter.cpp">
       <Filter>Source Files\Stream\Virtual</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleBlockOwner.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="block.h">
@@ -182,8 +185,11 @@
     <ClInclude Include="BinaryFileReader.h">
       <Filter>Header Files\Stream\File</Filter>
     </ClInclude>
+    <ClInclude Include="SimpleBlockOwner.h">
+      <Filter>Header Files\FileSystem</Filter>
+    </ClInclude>
     <ClInclude Include="VirtualWriter.h">
-      <Filter>Header Files\Stream\File</Filter>
+      <Filter>Header Files\Stream\Virtual</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

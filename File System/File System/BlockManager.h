@@ -105,6 +105,9 @@ namespace file {
 		*/
 		err::FileError removeFile(const FileReference& file);
 
+		/* Get the total number of blocks in manager.
+		*/
+		unsigned int blockSize();
 
 		/* Write to stream
 		*/

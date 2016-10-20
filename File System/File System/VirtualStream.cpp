@@ -95,7 +95,7 @@ namespace file {
 			return traits_type::eof();
 		}
 		//Write the buffer.
-		if (0 < _device.writeBlock(_block_queue.front(), _buffer.begin())) {
+		if (0 > _device.writeBlock(_block_queue.front(), _buffer.begin())) {
 			_err = err::INVALID_BLOCK;
 			return traits_type::eof();
 		}
@@ -147,13 +147,15 @@ namespace file {
 	*/
 	err::FileError VirtualStream::close() {
 		//Verify that this is a write buffer with remaining data and everything is OK
-		if (pptr() == nullptr || _block_queue.empty() || !err::good(_err))
+		if (pptr() == nullptr || _block_queue.empty() || err::bad(_err))
 			return _err;
 		//Flush the write buffer to virtual disk.
-		if (0 < _device.writeBlock(_block_queue.front(), _buffer.begin()))
+		if (0 > _device.writeBlock(_block_queue.front(), _buffer.begin()))
 			_err = err::INVALID_BLOCK;
 		setp(nullptr, nullptr, nullptr);
 		setg(nullptr, nullptr, nullptr);
+		//Flush queue
+		_block_queue = std::queue<int>();
 		return _err;
 	}
 

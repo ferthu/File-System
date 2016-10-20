@@ -33,6 +33,7 @@
     <ClCompile Include="DirectoryReference.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="Directory.cpp" />
+    <ClCompile Include="SimpleBlockOwner.cpp" />
     <ClCompile Include="VirtualStream.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="DirectoryTree.cpp" />
@@ -61,6 +62,7 @@
     <ClInclude Include="FileError.h" />
     <ClInclude Include="FileHeader.h" />
     <ClInclude Include="FileReference.h" />
+    <ClInclude Include="SimpleBlockOwner.h" />
     <ClInclude Include="VirtualStream.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="DirectoryTree.h" />

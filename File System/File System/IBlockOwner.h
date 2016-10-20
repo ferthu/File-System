@@ -32,18 +32,23 @@ namespace file {
 		return		>>	Success if no error occured on releasing the blocks (access, invalid block number, already released block)
 		*/
 		virtual err::FileError release(const std::vector<int>& block_num) = 0;
-
-		/* Force allocate a set of blocks.
-		*/
-		virtual void occupy(const std::vector<int>& blocks) = 0;
-
-		/* Get indices for all allocated blocks
-		*/
-		virtual std::vector<int> getOccupied() = 0;
-
+		
 		/*	Get the number of free memory blocks
 		*/
 		virtual size_t free() = 0;
+
+		/* Get occupied blocks
+		*/
+		virtual std::vector<int> getOccupied() = 0;
+		/* Occupy a specified set of blocks may change the forwarded list. Formats owner if not empty.
+		*/
+		virtual void occupy(std::vector<int>& occupied) = 0;
+		/* Format all blocks releasing the data.
+		*/
+		virtual void format() = 0;
+
+		/* Virtual destructor*/
+		virtual ~IBlockOwner() {};
 	};
 
 }

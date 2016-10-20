@@ -21,6 +21,12 @@ namespace err {
 		/* Occurs if error occured in file system. Where a non-existing file reference was sent to the manager.
 		*/
 		CORRUPTED_FILE = 5,
+		/* Not enough available memory
+		*/
+		MEMORY_OVERFLOW = 6,
+		/* A bad block was sent for release to memory manager 
+		*/
+		CORRUPTED_BLOCK = 7,
 
 		/* Stream is not opened or it is closed.
 		*/
@@ -36,16 +42,16 @@ namespace err {
 		READ_BUFFER_OVERFLOW = 23,
 		/* Write stream failed to write to a block.
 		*/
-		WRITE_BUFFER_OVERFLOW,
+		WRITE_BUFFER_OVERFLOW = 24,
 		/* BlockDevice was sent an invalid block for read/writing
 		*/
-		INVALID_BLOCK,
+		INVALID_BLOCK = 25,
 		/* Buffer was not a read buffer
 		*/
-		INVALID_READ_BUFFER,
+		INVALID_READ_BUFFER = 26,
 		/* Buffer was not a write buffer
 		*/
-		INVALID_WRITE_BUFFER
+		INVALID_WRITE_BUFFER = 27
 	};
 
 	/* Returns if the file error is good

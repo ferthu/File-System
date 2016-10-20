@@ -24,7 +24,12 @@ namespace file {
 		/* List directory items
 		*/
 		void listDirectory();
-		//void createFile(const std::string& name);
+		/* Create a file
+		*/
+		void createFile(const std::string& file_name, const std::string& data);
+		/* Get the data in a file
+		*/
+		void printFile(const std::string& file_name);
 
 		/* Output working directory to the stream
 		*/

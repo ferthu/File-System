@@ -76,8 +76,9 @@ namespace mf {
 	/* Read a vector of data. Returning the data in a vector */
 	template <class Element>
 	std::vector<Element> BinaryReader::readVector() {
-		std::vector<Element> vec(readUInt());
-		_stream.read(reinterpret_cast<char*>(vec.data()), sizeof(Element) * vec.size());
+		unsigned int size = readUInt();
+		std::vector<Element> vec(size);
+		_stream.read(reinterpret_cast<char*>(&vec[0]), sizeof(Element) * vec.size());
 		return vec;
 	}
 	/* Read a set of bytes from the stream
