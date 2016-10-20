@@ -11,7 +11,7 @@ namespace file {
 	{
 	private:
 		DirectoryReference _dir;
-		FileSystem _sys;
+		std::unique_ptr<FileSystem> _sys;
 	public:
 		FileSystemHandle();
 		~FileSystemHandle();
@@ -48,6 +48,14 @@ namespace file {
 		/* Returns current working directory
 		*/
 		std::string getWorkingPath();
+
+		/* Creates an image of file system
+		*/
+		void createImage(const std::string fileName);
+
+		/* Reads an image of file system
+		*/
+		void readImage(const std::string fileName);
 
 		/* Empties file system
 		*/

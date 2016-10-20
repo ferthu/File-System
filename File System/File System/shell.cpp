@@ -54,8 +54,10 @@ int main(void) {
 				_handle.printFile(commandArr[1]);
                 break;
             case 5: // createImage
+				_handle.createImage(commandArr[1]);
                 break;
             case 6: // restoreImage
+				_handle.readImage(commandArr[1]);
                 break;
             case 7: // rm
 				_handle.removeFile(commandArr[1]);
