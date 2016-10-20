@@ -162,6 +162,11 @@ namespace file {
 		}
 	}
 
+	std::string FileSystemHandle::getWorkingPath()
+	{
+		return _dir.getDirectoryString();
+	}
+
 	void FileSystemHandle::format()
 	{
 		_dir.format();

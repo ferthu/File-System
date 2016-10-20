@@ -76,6 +76,7 @@ int main(void) {
 				_handle.cd(commandArr[1]);
                 break;
             case 13: // pwd
+				std::cout << _handle.getWorkingPath() << std::endl;
                 break;
             case 14: // help
                 std::cout << help() << std::endl;

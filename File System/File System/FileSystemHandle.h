@@ -45,6 +45,10 @@ namespace file {
 		*/
 		void moveFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
 
+		/* Returns current working directory
+		*/
+		std::string getWorkingPath();
+
 		/* Empties file system
 		*/
 		void format();

@@ -173,6 +173,26 @@ bool DirectoryReference::removeCharacter(std::stringstream& stream, char c)
 	return false;
 }
 
+std::string DirectoryReference::getDirectoryString()
+{
+	int size = directory.size();
+	std::string output;
+
+	if (size < 1)
+	{
+		output = delimChar;
+	}
+	else
+	{
+		for (int i = 0; i < size; i++)
+		{
+			output += delimChar + directory[i];
+		}
+	}
+
+	return output;
+}
+
 void DirectoryReference::format()
 {
 	directory.clear();
