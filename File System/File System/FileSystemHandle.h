@@ -20,6 +20,14 @@ namespace file {
 		*/
 		bool constructDirRef(const std::string& str, DirectoryReference& ref);
 
+		/* Append or Construct a directory and file reference from the current directory
+		str		 <<	Directory string
+		ref		 <<	Directory reference that is appended
+		filename >>	Returns name of file specified in string
+		return	 >>	True if it was a bad directory. False if everything is OK.
+		*/
+		bool constructDirRefWithFile(const std::string& str, DirectoryReference& ref, std::string& filename);
+
 	public:
 		FileSystemHandle();
 		~FileSystemHandle();
@@ -43,15 +51,15 @@ namespace file {
 		void printFile(const std::string& file_name);
 		/* Copies a file from a directory to another
 		*/
-		void copyFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
+		void copyFile(const std::string& sourceDirectory, const std::string& targetDirectory);
 
 		/* Appends a file to another
 		*/
-		void appendFile(const std::string& toAppendDirectory, const std::string& toAppendFileName, const std::string& appendDataDirectory, const std::string& appendDataFileName);
+		void appendFile(const std::string& toAppendDirectory, const std::string& appendDataDirectory);
 
 		/* Moves a file or directory to another directory
 		*/
-		void move(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
+		void move(const std::string& sourceDirectory, const std::string& targetDirectory);
 
 		/* Returns current working directory
 		*/
@@ -68,6 +76,10 @@ namespace file {
 		/* Empties file system
 		*/
 		void format();
+
+		/* Sets access rights of a file
+		*/
+		void setRights(const std::string& fileDir, std::string status);
 
 		/* Output working directory to the stream
 		*/

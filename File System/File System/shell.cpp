@@ -6,11 +6,11 @@
 #include"FileSystemHandle.h"
 
 const int MAXCOMMANDS = 8;
-const int NUMAVAILABLECOMMANDS = 15;
+const int NUMAVAILABLECOMMANDS = 16;
 
 std::string availableCommands[NUMAVAILABLECOMMANDS] = {
     "quit","format","ls","create","cat","createImage","restoreImage",
-    "rm","cp","append","mv","mkdir","cd","pwd","help"
+    "rm","cp","append","mv","mkdir","cd","pwd","help","chmod"
 };
 
 /* Takes usercommand from input and returns number of commands, commands are stored in strArr[] */
@@ -63,13 +63,13 @@ int main(void) {
 				_handle.remove(commandArr[1]);
                 break;
             case 8: // cp
-				_handle.copyFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
+				_handle.copyFile(commandArr[1], commandArr[2]);
                 break;
             case 9: // append
-				_handle.appendFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
+				_handle.appendFile(commandArr[1], commandArr[2]);
                 break;
             case 10: // mv
-				_handle.move(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
+				_handle.move(commandArr[1], commandArr[2]);
                 break;
             case 11: // mkdir
 				_handle.createFolder(commandArr[1]);
@@ -83,6 +83,24 @@ int main(void) {
             case 14: // help
                 std::cout << help() << std::endl;
                 break;
+			case 15: // chmod
+				try
+				{
+					_handle.setRights(commandArr[2], commandArr[1]);
+				}
+				catch (std::invalid_argument e)
+				{
+					std::cout << e.what();
+				}
+				catch (std::out_of_range e)
+				{
+					std::cout << e.what();
+				}
+				catch (err::FileError err)
+				{
+					std::cout << "Error: " << err::getMsg(err);
+				}
+				break;
             default:
                 std::cout << "Unknown command: " << commandArr[0] << std::endl;
             }

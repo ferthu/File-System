@@ -201,9 +201,22 @@ namespace file {
 	*/
 	err::FileError BlockManager::writeAccess(const FileReference& file, char status) {
 		VirtualReader reader(_disk);
+		VirtualWriter writer(_disk);
 		FileHeader header;
-		//Do it :)
-		throw std::exception("To do!!!");
+
+		// read header
+		err::FileError err = reader.readHeader(file._block, header);
+		if (err::bad(err))
+			return err;
+
+		header._access = status;
+
+		// write updated header
+		err = writer.writeHeader(file._block, header);
+		if (err::bad(err))
+			return err;
+		
+		return err::SUCCESS;
 	}
 
 	/* Appends from the first file to the other removing the first file.
