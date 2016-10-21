@@ -10,7 +10,7 @@ namespace file {
 	public:
 
 		FileHeader() 
-		: _fileName(), _access(), _size() {		}
+		: _fileName(), _access(4), _size() {		}
 		FileHeader(const std::string& name, unsigned char access, unsigned int size)
 			: _fileName(name), _access(access), _size(size) {		}
 
