@@ -42,7 +42,7 @@ namespace file {
 		void listDirectory();
 		/* Create a file
 		*/
-		void createFile(const std::string& file_name, const std::string& data);
+		void createFile(const std::string& file_name, char access, const std::string& data);
 		/* Remove a file or directory
 		*/
 		void remove(const std::string& path);

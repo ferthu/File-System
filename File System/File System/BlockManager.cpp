@@ -88,8 +88,8 @@ namespace file {
 	created_ref	>>	Reference to the file created
 	return		>>	Returns if the file was created or if an error occured.
 	*/
-	err::FileError BlockManager::writeFile(const std::string& name, const std::string& data, FileReference& created_ref) {
-		File file(name, 0, data);
+	err::FileError BlockManager::writeFile(const std::string& name, const std::string& data, char access, FileReference& created_ref) {
+		File file(name, access, data);
 		return writeFile(file, created_ref);
 	}
 	/* Remove any data related to the file reference. Any data will be removed regardless if all information exists or not.
@@ -151,9 +151,10 @@ namespace file {
 	/* Overwrite the data in the file
 	file_to_edit	<<	Reference to the file that is overwritten
 	data			<<	Data to write to the file
+	access			<<	Access rights to the created file
 	return			>>	Returns if the data was successfully written to the file or if an error occured.
 	*/
-	err::FileError BlockManager::overwriteFile(FileReference& file_to_edit, const std::string& data) {
+	err::FileError BlockManager::overwriteFile(FileReference& file_to_edit, const std::string& data, char access) {
 		
 		VirtualReader reader(_disk);
 		File file;
@@ -164,7 +165,8 @@ namespace file {
 		//Verify file is writable
 		if (!file._header.isWritable())
 			return err::NO_WRITE_ACCESS;
-
+		//Set new access
+		file._header._access = access;
 		//Change file data
 		file.setData(data);
 		//Overwrite the file preserving old file on error

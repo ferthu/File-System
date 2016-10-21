@@ -63,8 +63,8 @@ namespace file {
 	}
 	/* Create a file
 	*/
-	void FileSystemHandle::createFile(const std::string& file_name, const std::string& data) {
-		err::FileError error = _sys->createFile(_dir.getDirectory(), file_name, data);
+	void FileSystemHandle::createFile(const std::string& file_name, char access, const std::string& data) {
+		err::FileError error = _sys->createFile(_dir.getDirectory(), file_name, access, data);
 		if (err::bad(error))
 		{
 			std::cout << "Error creating file, error: " << err::getMsg(error) << std::endl;
@@ -108,16 +108,8 @@ namespace file {
 			return;
 
 		std::string fileContents;
-		err::FileError err = _sys->getFile(source.getDirectory(), sourceFileName, fileContents);
-		if (err::good(err))
-		{
-			err = _sys->createFile(target.getDirectory(), targetFileName, fileContents);
-			if (err::bad(err))
-			{
-				std::cout << "Error copying file: " << err::getMsg(err) << std::endl;
-			}
-		}
-		else
+		err::FileError err = _sys->copy(source.getDirectory(), sourceFileName, target.getDirectory(), targetFileName);
+		if (err::bad(err))
 		{
 			std::cout << "Error reading file: " << err::getMsg(err) << std::endl;
 		}
@@ -138,33 +130,11 @@ namespace file {
 		std::string originalContents;
 		std::string appendContents;
 
-		// read original file
-		err::FileError err = _sys->getFile(toAppend.getDirectory(), toAppendFileName, originalContents);
-		if (err::good(err))
+		err::FileError err  = _sys->appendFile(appendData.getDirectory(), appendDataFileName, toAppend.getDirectory(), toAppendFileName);
+		if (err::bad(err))
 		{
-			// read append data
-			err::FileError err = _sys->getFile(appendData.getDirectory(), appendDataFileName, appendContents);
-			if (err::good(err))
-			{
-				// remove original file
-				err = _sys->removeFile(toAppend.getDirectory(), toAppendFileName);
-				if (err::good(err))
-				{
-					// create new appended file
-					std::string newContents = originalContents + appendContents;
-					err = _sys->createFile(toAppend.getDirectory(), toAppendFileName, newContents);
-					if (err::bad(err))
-						std::cout << "Error creating appended file, error: " << err << std::endl;
-				}
-				else
-					std::cout << "Error replacing file: " << err::getMsg(err) << std::endl;
-			}
-			else
-				std::cout << "Error reading second file: " << err::getMsg(err) << std::endl;
+			std::cout << "Error appending file, id: " << err::getMsg(err) << std::endl;
 		}
-		else
-			std::cout << "Error reading first file: " << err::getMsg(err) << std::endl;
-
 	}
 
 	/* Moves a file or directory to another directory
