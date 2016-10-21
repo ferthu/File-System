@@ -122,7 +122,7 @@ namespace file {
 		}
 		//Write directories
 		writer.writeUInt((unsigned int)_directories.size());
-		for (int i = 0; i < _files.size(); i++)
+		for (int i = 0; i < _directories.size(); i++)
 			_directories[i]->writeToStream(writer);
 	}
 	std::unique_ptr<Directory> Directory::readFromStream(mf::BinaryFileReader& reader) {
@@ -131,8 +131,13 @@ namespace file {
 		std::unique_ptr<Directory> dir(new Directory(name));
 		//Read files
 		unsigned int fileNum = reader.readUInt();
-		for (unsigned int i = 0; i < fileNum; i++)
-			dir->addFile(FileReference(reader.readString(), reader.readInt()));
+		for (unsigned int i = 0; i < fileNum; i++) {
+			//Read in order. Create reference first
+			FileReference ref;
+			ref._name = reader.readString();
+			ref._block = reader.readInt();
+			dir->addFile(ref);
+		}
 		//Read child directories
 		unsigned int dirNum = reader.readUInt();
 		for (unsigned int i = 0; i < dirNum; i++)

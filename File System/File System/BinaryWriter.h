@@ -47,7 +47,7 @@ namespace mf{
 		void writeVector(const std::vector<Element>& vector);
 		/* Write a pointer of defined byte size containing an array of data.
 		pointer	<<	pointer to the data
-		size	<<	Size in bytes to write to the stream.
+		size	<<	Number of elements to write to the stream.
 		*/
 		template <class Element>
 		void writePtr(const Element* pointer, size_t size);
@@ -64,11 +64,11 @@ namespace mf{
 	/* Write a vector of data */
 	template <class Element>
 	void BinaryWriter::writeVector(const std::vector<Element>& vector) {
-		writePtr(&vector[0], vector.size());
+		writePtr(vector.data(), vector.size());
 	}
 	/* Write a pointer of defined byte size containing an array of data.
 	pointer	<<	pointer to the data
-	size	<<	Size in bytes to write to the stream.
+	size	<<	Number of elements to write to the stream.
 	*/
 	template <class Element>
 	void BinaryWriter::writePtr(const Element* value, size_t size) {

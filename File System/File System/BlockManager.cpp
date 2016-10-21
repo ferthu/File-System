@@ -239,10 +239,11 @@ namespace file {
 
 		//Write Owner....
 		writer.writeUInt(blockSize());
+		writer.writeUInt(occupied.size());
 
 		for (int i = 0; i < occupied.size(); i++) {
 			writer.writeInt(occupied[i]);
-			Block& data = _disk[i];
+			Block& data = _disk[occupied[i]];
 			writer.writePtr(data.begin(), data.size());
 		}
 	}
@@ -254,12 +255,13 @@ namespace file {
 		unsigned int block_size = reader.readUInt();
 		BlockManager manager(block_size);
 
+		unsigned int num_occupied = reader.readUInt();
 		//Occupired blocks
-		std::vector<int> occupied;
+		std::vector<int> occupied(num_occupied);
 
-		for (int i = 0; i < occupied.size(); i++) {
+		for (int i = 0; i < num_occupied; i++) {
 			int block_num = reader.readInt();
-			occupied.push_back(block_num);
+			occupied[i] = block_num;
 			size_t size;
 			char* ptr = reader.readPtr<char>(size);
 			manager._disk.writeBlock(block_num, ptr);

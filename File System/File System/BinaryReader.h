@@ -48,12 +48,12 @@ namespace mf {
 		/* Read a vector of data. Returning the data in a vector */
 		template <class Element>
 		std::vector<Element> readVector();
-		/* Read a set of bytes from the stream
-		byte_size	>>	Number of bytes read from the stream.
-		return		>>	Data pointer read from the stream.
+		/* Read a set of elements from the stream
+		count	>>	Number of elements read from the stream.
+		return	>>	Data pointer read from the stream.
 		*/
 		template <class Element>
-		Element* readPtr(size_t& byte_size);
+		Element* readPtr(size_t& count);
 
 	};
 	template <class Element>
@@ -78,18 +78,18 @@ namespace mf {
 	std::vector<Element> BinaryReader::readVector() {
 		unsigned int size = readUInt();
 		std::vector<Element> vec(size);
-		_stream.read(reinterpret_cast<char*>(&vec[0]), sizeof(Element) * vec.size());
+		_stream.read(reinterpret_cast<char*>(vec.data()), sizeof(Element) * vec.size());
 		return vec;
 	}
-	/* Read a set of bytes from the stream
-	byte_size	>>	Number of bytes read from the stream.
-	return		>>	Data pointer read from the stream.
+	/* Read a set of elements from the stream
+	count	>>	Number of elements read from the stream.
+	return	>>	Data pointer read from the stream.
 	*/
 	template <class Element>
-	Element* BinaryReader::readPtr(size_t& byte_size) {
-		byte_size = readUInt();
-		std::unique_ptr<char> ptr(new char[byte_size]);
-		_stream.read(ptr.get(), byte_size);
+	Element* BinaryReader::readPtr(size_t& count) {
+		count = readUInt();
+		std::unique_ptr<char> ptr(new char[count * sizeof(Element)]);
+		_stream.read(ptr.get(), count * sizeof(Element));
 		return reinterpret_cast<Element*>(ptr.release());
 	}
 

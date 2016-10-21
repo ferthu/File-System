@@ -129,7 +129,7 @@ namespace file {
 		if (occupied.back() >= _status.size())
 			throw new std::out_of_range("Blocks called for occupation is out of range");
 		//Occupy in reverse order due to sorted arrangment.
-		for(size_t i = occupied.size() - 1; i >= 0; i--) {
+		for(size_t i = occupied.size(); 0 < i--;) {
 			_free.erase(_free.begin() + occupied[i]);
 			_status[occupied[i]] = true;
 		}
