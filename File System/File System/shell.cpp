@@ -48,7 +48,7 @@ int main(void) {
             case 3: // create
 				std::cout << "Write file data:\n";
 				getline(std::cin, tmp);
-				_handle.createFile(commandArr[1], tmp);
+				_handle.createFile(commandArr[1], 4, tmp);
                 break;
             case 4: // cat
 				_handle.printFile(commandArr[1]);

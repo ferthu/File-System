@@ -111,7 +111,7 @@ err::FileError FileSystem::listDirOnly(const std::vector<std::string>& directory
 
 #pragma region File Functions
 
-err::FileError FileSystem::createFile(const std::vector<std::string>& directory, const std::string& file_name, const std::string& data) {
+err::FileError FileSystem::createFile(const std::vector<std::string>& directory, const std::string& file_name, char access, const std::string& data) {
 	file::DirectoryAccess dir = _root.accessDirectory(directory);
 	if (dir.access()) {
 		//File reference operated on
@@ -121,7 +121,7 @@ err::FileError FileSystem::createFile(const std::vector<std::string>& directory,
 		if (err::good(dir->getFile(file_name, ref))) {
 			/* Overwrite old file
 			*/
-			err::FileError error = _manager.overwriteFile(ref, data);
+			err::FileError error = _manager.overwriteFile(ref, data, access);
 			if (err::bad(error))
 				return error;
 			//Update reference
@@ -130,7 +130,7 @@ err::FileError FileSystem::createFile(const std::vector<std::string>& directory,
 		else {
 			/* Write a new file
 			*/
-			err::FileError error = _manager.writeFile(file_name, data, ref);
+			err::FileError error = _manager.writeFile(file_name, data, access, ref);
 			if (err::bad(error))
 				return error;
 			//Add the file

@@ -41,7 +41,7 @@ public:
 
     /* This function creates a file in the filesystem 
 	*/
-	err::FileError createFile(const std::vector<std::string>& directory, const std::string& file_name, const std::string& data);
+	err::FileError createFile(const std::vector<std::string>& directory, const std::string& file_name, char access, const std::string& data);
 	/* This function creates a file in the filesystem
 	*/
 	err::FileError getFile(const std::vector<std::string>& directory, const std::string& file_name, std::string& data);

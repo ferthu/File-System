@@ -69,10 +69,11 @@ namespace file {
 		/*	Write a file 
 		name		<<	Name of the file
 		data		<<	Data input for the file
+		access		<<	Access rights for the created file
 		created_ref	>>	Reference to the file created 
 		return		>>	Returns if the file was created or if an error occured.
 		*/
-		err::FileError writeFile(const std::string& name, const std::string& data, FileReference& created_ref);
+		err::FileError writeFile(const std::string& name, const std::string& data, char access, FileReference& created_ref);
 		/* Copy the specific file
 		name		<<	Name of the new file.
 		from		<<	Reference to the file that is to be copied.
@@ -83,9 +84,10 @@ namespace file {
 		/* Overwrite the data in the file
 		file_to_edit	<<	Reference to the file that is overwritten
 		data			<<	Data to write to the file
+		access			<<	Access of the file created
 		return			>>	Returns if the data was successfully written to the file or if an error occured.
 		*/
-		err::FileError overwriteFile(FileReference& file_to_edit, const std::string& data);
+		err::FileError overwriteFile(FileReference& file_to_edit, const std::string& data, char access);
 		/*	Read the data from a specified file
 		file	<<	Reference to the file to read from
 		data	>>	Data read from the file
