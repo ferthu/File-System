@@ -144,9 +144,9 @@ std::string help() {
     helpStr += "* createImage <real-file>:					Saves disk to <real-file>\n";
     helpStr += "* restoreImage <real-file>:					Reads <real-file> onto disk\n";
     helpStr += "* rm <file>:							Removes <file>\n";
-    helpStr += "* cp <src dir> <src file> <dst dir> <dst file>:			Copy <src file> in <src dir> to <dst file> in <dst dir>\n";
-    helpStr += "* append <src dir> <src file> <dst dir> <dst file>:		Appends contents of <src file> in <src dir> to <dst file> in <dst dir>\n";
-    helpStr += "* mv <src dir> <src file> <dst dir> <dst file>:			Renames or moves <src file> in <src dir> to <dst file> in <dst dir>\n";
+    helpStr += "* cp <src file dir> <dst file dir>:				Copy <src file> to <dst file>\n";
+    helpStr += "* append <src file dir> <dst file dir>:				Appends contents of <src file> to <dst file>\n";
+    helpStr += "* mv <src file dir> <dst file dir>:				Renames or moves <src file> to <dst file>\n";
     helpStr += "* mkdir <directory>:						Creates a new directory called <directory>\n";
     helpStr += "* cd <directory>:						Changes current working directory to <directory>\n";
     helpStr += "* pwd:								Get current working directory\n";
