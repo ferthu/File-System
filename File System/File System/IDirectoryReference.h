@@ -5,13 +5,14 @@
 #include<vector>
 #include"FileReference.h"
 #include"FileError.h"
+#include"DirectoryType.h"
 
 namespace file {
 
 	/* Forward declaration
 	*/
 	class Directory;
-
+	
 	/* Interface for referencing a directory object.
 	*/
 	class IDirectoryReference {
@@ -45,6 +46,13 @@ namespace file {
 		/* Get the names of the child directories
 		*/
 		virtual std::vector<std::string> getDirectoryNames() = 0;
+
+		/* Get if the name is a directory or a file type
+		*/
+		virtual type::Dir getType(const std::string& name) = 0;
+		/* Move ownership of a child directory or file
+		*/
+		virtual err::FileError moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& ref) = 0;
 		/* Virtual destructor
 		*/
 		virtual ~IDirectoryReference() {};

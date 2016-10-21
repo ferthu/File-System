@@ -15,6 +15,10 @@ namespace file {
 			: _fileName(name), _access(access), _size(size) {		}
 
 		/* Write/Read access to the file
+		0: No access
+		1: Write Only
+		2: Read Only
+		2<: Full access
 		*/
 		char _access;
 		/* Name of the file
@@ -29,11 +33,11 @@ namespace file {
 
 		/* Verify the readable access */
 		bool isReadable() const {
-			return true;
+			return _access > 1;
 		}
 		/* Verify the readable access */
 		bool isWritable() const {
-			return true;
+			return _access == 1 || _access > 2;
 		}
 		/* Verify this is a header */
 		bool isValidHeader() const {

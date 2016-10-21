@@ -72,7 +72,7 @@ namespace file {
 	*/
 	err::FileError SimpleBlockOwner::allocate(unsigned int num, std::vector<int>& block_num) {
 		if (verifyFreeCount(num)) {
-			for (int i = 0; i < num; i++)
+			for (unsigned int i = 0; i < num; i++)
 				block_num.push_back(singleAllocate());
 			return err::SUCCESS;
 		}
@@ -111,7 +111,7 @@ namespace file {
 	std::vector<int> SimpleBlockOwner::getOccupied() {
 		std::vector<int> list(_status.size() - _free.size());
 		int list_ind = 0;
-		for (size_t i = 0; i < _status.size(); i++) {
+		for (int i = 0; i < _status.size(); i++) {
 			//If index is occupised add it to the list
 			if (_status[i])
 				list[list_ind++] = i;
@@ -142,7 +142,7 @@ namespace file {
 		_status = std::vector<bool>(size, false);
 		_free = std::vector<int>(size);
 		//Add all blocks to the free list.
-		for (size_t i = 0; i < _free.size(); i++)
+		for (int i = 0; i < _free.size(); i++)
 			_free[i] = i;
 	}
 

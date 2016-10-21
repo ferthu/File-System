@@ -142,7 +142,7 @@ DirectoryReference::~DirectoryReference() {}
 
 std::ostream& operator<<(std::ostream& os, const DirectoryReference& dr)
 {
-	int size = dr.directory.size();
+	int size = (int)dr.directory.size();
 
 	if (size < 1)
 	{
@@ -175,7 +175,7 @@ bool DirectoryReference::removeCharacter(std::stringstream& stream, char c)
 
 std::string DirectoryReference::getDirectoryString()
 {
-	int size = directory.size();
+	int size = (int)directory.size();
 	std::string output;
 
 	if (size < 1)

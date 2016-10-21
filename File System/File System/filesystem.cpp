@@ -16,24 +16,37 @@ FileSystem::~FileSystem() {
 
 }
 
-#pragma region Directory Functions
+#pragma region Directory & File Functions
+/* Removes a folder or file in the filesystem
+*/
+err::FileError FileSystem::remove(const std::vector<std::string>& directory, const std::string& name) {
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	if (dir.access()) {
+		file::type::Dir type = dir->getType(name);
+		if (type == file::type::File)
+			return rmFile(dir, name);
+		else if (type == file::type::Folder)
+			return rmFolder(dir, name);
+		return err::NOT_FOUND;
+	}
+	return dir.getError();
+}
 
-/* Creates a folder in the filesystem */
-err::FileError FileSystem::createFolder(const std::vector<std::string>& directory, const std::string& folder_name) {
-	file::DirectoryAccess dir = _root.accessDirectory(directory);
-	if (dir.access()) {
-		dir._directory->addDirectory(std::unique_ptr<file::Directory>(new file::Directory(folder_name)));
-	}
-	return dir.getError();
+err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const std::string& from_name, const std::vector<std::string>& move_dir, const std::string& move_name) {
+
+	//Access first directory
+	file::DirectoryAccess f_dir = _root.accessDirectory(from_dir);
+	if (!f_dir.access())
+		return f_dir.getError();
+	//Access second directory
+	file::DirectoryAccess m_dir = _root.accessDirectory(move_dir);
+	if (!m_dir.access())
+		return m_dir.getError();
+
+	//Move
+	return f_dir->moveChild(from_name, move_name, *m_dir._directory);
 }
-/* Removes a folder in the filesystem */
-err::FileError FileSystem::removeFolder(const std::vector<std::string>& directory, const std::string& folder_name) {
-	file::DirectoryAccess dir = _root.accessDirectory(directory);
-	if (dir.access()) {
-		return dir._directory->removeDirectory(folder_name);
-	}
-	return dir.getError();
-}
+
 /* This function will get all the files and folders in the specified folder */
 err::FileError FileSystem::listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) const {
 	file::DirectoryAccess dir = _root.accessDirectory(directory);
@@ -49,8 +62,34 @@ err::FileError FileSystem::listDir(const std::vector<std::string>& directory, st
 
 		//Get files
 		tmp = dir->getFileNames();
-		list.insert(list.begin(), tmp.begin(), tmp.end());
+		list.insert(list.end(), tmp.begin(), tmp.end());
 		return err::SUCCESS;
+	}
+	return dir.getError();
+}
+
+#pragma endregion
+
+#pragma region Directory Functions
+
+/* Creates a folder in the filesystem */
+err::FileError FileSystem::createFolder(const std::vector<std::string>& directory, const std::string& folder_name) {
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	if (dir.access()) {
+		dir._directory->addDirectory(std::unique_ptr<file::Directory>(new file::Directory(folder_name)));
+	}
+	return dir.getError();
+}
+/* Removes a folder in the filesystem */
+err::FileError FileSystem::removeFolder(const std::vector<std::string>& directory, const std::string& folder_name) {
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	return rmFolder(dir, folder_name);
+}
+/* Remove a folder
+*/
+err::FileError FileSystem::rmFolder(file::DirectoryAccess& dir, const std::string& folder_name) {
+	if (dir.access()) {
+		return dir._directory->removeDirectory(folder_name);
 	}
 	return dir.getError();
 }
@@ -110,10 +149,8 @@ err::FileError FileSystem::getFile(const std::vector<std::string>& directory, co
 		/* Verify that file does not already exist
 		*/
 		err::FileError error = dir->getFile(file_name, ref);
-		if (err::good(error)) {
-			_manager.readFile(ref, data);
-			return err::SUCCESS;
-		}
+		if (err::good(error))
+			return _manager.readFile(ref, data);
 		return error;
 	}
 	return dir.getError();
@@ -121,6 +158,33 @@ err::FileError FileSystem::getFile(const std::vector<std::string>& directory, co
 /* Removes a file in the filesystem */
 err::FileError FileSystem::removeFile(const std::vector<std::string>& directory, const std::string& file_name) {
 	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	return rmFile(dir, file_name);
+}
+/* Set the specific rights of the file
+directory	<<	Directory of the file to append.
+file_name	<<	Name of the file to be appended, removed on success.
+status		<<	Access rights. (readbit,writebit) -> 0:No access, 1: Write Only, 2: Read Only, 2<: Read & Write
+*/
+err::FileError FileSystem::setRights(const std::vector<std::string>& directory, const std::string& file_name, char status) {
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	if (dir.access()) {
+		//File reference operated on
+		file::FileReference ref;
+		/* Verify that file does not already exist
+		*/
+		err::FileError error = dir->getFile(file_name, ref);
+		if (err::good(error)) {
+			_manager.writeAccess(ref, status);
+			return err::SUCCESS;
+		}
+		return error;
+	}
+	return dir.getError();
+}
+
+/* Remove a file
+*/
+err::FileError FileSystem::rmFile(file::DirectoryAccess& dir, const std::string& file_name) {
 	if (dir.access()) {
 		//File reference operated on
 		file::FileReference ref;

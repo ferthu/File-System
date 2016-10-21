@@ -13,6 +13,13 @@ private:
 	file::DirectoryTree _root;
 	file::BlockManager _manager;
     // Here you can add your own data structures
+
+	/* Remove a file
+	*/
+	err::FileError rmFile(file::DirectoryAccess& dir, const std::string& file_name);
+	/* Remove a folder
+	*/
+	err::FileError rmFolder(file::DirectoryAccess& dir, const std::string& folder_name);
 public:
     FileSystem();
 	FileSystem(file::DirectoryTree& tree, file::BlockManager& manager);
@@ -42,6 +49,12 @@ public:
 	/* Removes a file in the filesystem 
 	*/
 	err::FileError removeFile(const std::vector<std::string>& directory, const std::string& file_name);
+	/* Removes a folder or file in the filesystem
+	*/
+	err::FileError remove(const std::vector<std::string>& directory, const std::string& name);
+	/* Moves a folder or file in the system
+	*/
+	err::FileError move(const std::vector<std::string>& from_dir, const std::string& from_name, const std::vector<std::string>& move_dir, const std::string& move_name);
 
     /* This function will get all the files and folders in the specified folder 
 	*/
@@ -50,6 +63,12 @@ public:
 	/* This function will get all the folders in the specified folder
 	*/
 	err::FileError listDirOnly(const std::vector<std::string>& directory, std::vector<std::string>& list) const;
+	/* Set the specific rights of the file
+	directory	<<	Directory of the file to append.
+	file_name	<<	Name of the file to be appended, removed on success.
+	status		<<	Access rights. (readbit,writebit) -> 0:No access, 1: Write Only, 2: Read Only, 2<: Read & Write	
+	*/
+	err::FileError setRights(const std::vector<std::string>& directory, const std::string& file_name, char status);
 
 	/* Append file data from a file to the end of another. Removing file that is appended to the other.
 	from_dir	<<	Directory of the file to append.

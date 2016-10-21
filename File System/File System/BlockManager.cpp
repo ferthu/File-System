@@ -195,6 +195,17 @@ namespace file {
 		*/
 #pragma endregion
 	}
+
+
+	/* Rewrite the file header with the specified status
+	*/
+	err::FileError BlockManager::writeAccess(const FileReference& file, char status) {
+		VirtualReader reader(_disk);
+		FileHeader header;
+		//Do it :)
+		throw std::exception("To do!!!");
+	}
+
 	/* Appends from the first file to the other removing the first file.
 	from	<<	File to append to the other and remove when operation is complete
 	to		<<	Second file that the first file is appended to, reference remains constant
@@ -239,7 +250,7 @@ namespace file {
 
 		//Write Owner....
 		writer.writeUInt(blockSize());
-		writer.writeUInt(occupied.size());
+		writer.writeUInt((unsigned int)occupied.size());
 
 		for (int i = 0; i < occupied.size(); i++) {
 			writer.writeInt(occupied[i]);
@@ -259,7 +270,7 @@ namespace file {
 		//Occupired blocks
 		std::vector<int> occupied(num_occupied);
 
-		for (int i = 0; i < num_occupied; i++) {
+		for (unsigned int i = 0; i < num_occupied; i++) {
 			int block_num = reader.readInt();
 			occupied[i] = block_num;
 			size_t size;
@@ -286,7 +297,7 @@ namespace file {
 	*/
 	err::FileError  BlockManager::allocateMore(int numblocks, std::vector<int>& blocks) {
 		std::vector<int> new_blocks;
-		err::FileError error = _owner->allocate(numblocks - blocks.size(), new_blocks);
+		err::FileError error = _owner->allocate((unsigned int)(numblocks - blocks.size()), new_blocks);
 		//Verify no error allocating blocks
 		if (err::bad(error))
 			return error;

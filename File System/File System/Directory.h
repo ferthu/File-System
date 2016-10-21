@@ -29,6 +29,8 @@ namespace file {
 		/* Compares a directory name
 		*/
 		bool compareDirectoryName(const std::string& dir_name);
+
+		int getDirectory(const std::string& dir_name);
 	public:
 		Directory(const std::string& name);
 		virtual ~Directory();
@@ -66,6 +68,12 @@ namespace file {
 		*/
 		virtual std::vector<std::string> getDirectoryNames();
 
+		/* Get if the name is a directory or a file type
+		*/
+		virtual type::Dir getType(const std::string& name);
+		/* Move ownership of a child directory or file
+		*/
+		virtual err::FileError moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& move_to);
 
 		/* Write directory to stream
 		*/

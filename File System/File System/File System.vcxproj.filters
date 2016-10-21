@@ -84,9 +84,6 @@
     <ClCompile Include="BlockManager.cpp">
       <Filter>Source Files\FileSystem</Filter>
     </ClCompile>
-    <ClCompile Include="FileSystemHandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="BinaryReader.cpp">
       <Filter>Source Files\Stream</Filter>
     </ClCompile>
@@ -109,6 +106,12 @@
       <Filter>Source Files\Stream\Virtual</Filter>
     </ClCompile>
     <ClCompile Include="SimpleBlockOwner.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="FileError.cpp">
+      <Filter>Source Files\FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystemHandle.cpp">
       <Filter>Source Files\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -190,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="VirtualWriter.h">
       <Filter>Header Files\Stream\Virtual</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectoryType.h">
+      <Filter>Header Files\FileSystem\DirectoryTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

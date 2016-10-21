@@ -99,6 +99,10 @@ namespace file {
 		*/
 		err::FileError appendFile(FileReference& from, FileReference& to);
 
+		/* Rewrite the file header with the specified status
+		*/
+		err::FileError writeAccess(const FileReference& file, char status);
+
 		/* Remove any data related to the file reference. Any data will be removed regardless if all information exists or not.
 		file	<<	File reference to be removed
 		return	>>	 Verifies file is writable or reference pointed to a header. If another problem was found with the file reference, any relevant data is removed even on failure.

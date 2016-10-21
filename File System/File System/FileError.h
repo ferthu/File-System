@@ -1,5 +1,5 @@
 #pragma once
-
+#include<string>
 
 namespace err {
 	/* Enum of the errors that can occur in the system.
@@ -27,6 +27,9 @@ namespace err {
 		/* A bad block was sent for release to memory manager 
 		*/
 		CORRUPTED_BLOCK = 7,
+		/* File or folder was not found
+		*/
+		NOT_FOUND = 8,
 
 		/* Stream is not opened or it is closed.
 		*/
@@ -64,4 +67,8 @@ namespace err {
 	static bool bad(FileError err) {
 		return err != FileError::SUCCESS;
 	}
+
+	/* Get a error message
+	*/
+	const std::string& getMsg(FileError error);
 }

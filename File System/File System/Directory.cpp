@@ -17,19 +17,25 @@ namespace file {
 	bool Directory::compareDirectoryName(const std::string& dir_name) {
 		return dir_name == _name;
 	}
+	int Directory::getDirectory(const std::string& dir_name) {
+		for (size_t i = 0; i < _directories.size(); i++) {
+			if (_directories[i]->compareDirectoryName(dir_name))
+				return (int)i;
+		}
+		return -1;
+	}
 	/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.
 	*/
 	DirectoryAccess Directory::accessDirectory(const std::vector<std::string>& directory, unsigned int traversal_lvl) {
 		/* Check if destination directory is reached
 		*/
-		if(traversal_lvl == directory.size())
+		if (traversal_lvl == directory.size())
 			return DirectoryAccess(traversal_lvl, this, err::SUCCESS);
 		/* Traverse the tree
 		*/
-		for (size_t i = 0; i < _directories.size(); i++) {
-			if (_directories[i]->compareDirectoryName(directory[traversal_lvl]))
-				return _directories[i]->accessDirectory(directory, ++traversal_lvl);
-		}
+		int dir_index = getDirectory(directory[traversal_lvl]);
+		if (dir_index >= 0)
+			return _directories[dir_index]->accessDirectory(directory, ++traversal_lvl);
 		/*	No child directory with specified name exists
 		*/
 		return DirectoryAccess(traversal_lvl + 1, nullptr, err::DIRECTORY_DOES_NOT_EXIST);
@@ -44,13 +50,30 @@ namespace file {
 	return	>>	If the directory exists
 	*/
 	err::FileError Directory::removeDirectory(const std::string& name) {
-		for (size_t i = 0; i < _directories.size(); i++) {
-			if (_directories[i]->compareDirectoryName(name)) {
-				_directories.erase(_directories.begin() + i);
-				return err::SUCCESS;
-			}
+		int dir_index = getDirectory(name);
+		if (dir_index >= 0) {
+			_directories.erase(_directories.begin() + dir_index);
+			return err::SUCCESS;
 		}
 		return err::FOLDER_DOES_NOT_EXIST;
+	}
+	/* Move ownership of a child directory or file
+	*/
+	err::FileError Directory::moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& move_to) {
+		int dir_index = getDirectory(name);
+		if (dir_index >= 0) {
+			_directories[dir_index]->_name = new_name;
+			move_to.addDirectory(_directories[dir_index]);
+			_directories.erase(_directories.begin() + dir_index);
+			return err::SUCCESS;
+		}
+		FileReference ref;
+		if (err::good(getFile(name, ref))) {
+			move_to.addFile(FileReference(new_name, ref._block));
+			removeFile(ref);
+			return err::SUCCESS;
+		}
+		return err::NOT_FOUND;
 	}
 	/* Get a file
 	name		<<	Name of the file
@@ -106,6 +129,16 @@ namespace file {
 			names[i] = _directories[i]->_name;
 		}
 		return names;
+	}
+	/* Get if the name is a directory or a file type
+	*/
+	type::Dir Directory::getType(const std::string& name) {
+		FileReference ref;
+		if (err::good(getFile(name, ref)))
+			return type::File;
+		if (getDirectory(name) >= 0)
+			return type::Folder;
+		return type::None;
 	}
 
 

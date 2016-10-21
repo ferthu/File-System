@@ -60,7 +60,7 @@ int main(void) {
 				_handle.readImage(commandArr[1]);
                 break;
             case 7: // rm
-				_handle.removeFile(commandArr[1]);
+				_handle.remove(commandArr[1]);
                 break;
             case 8: // cp
 				_handle.copyFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
@@ -69,7 +69,7 @@ int main(void) {
 				_handle.appendFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 10: // mv
-				_handle.moveFile(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
+				_handle.move(commandArr[1], commandArr[2], commandArr[3], commandArr[4]);
                 break;
             case 11: // mkdir
 				_handle.createFolder(commandArr[1]);

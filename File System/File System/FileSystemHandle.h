@@ -12,6 +12,14 @@ namespace file {
 	private:
 		DirectoryReference _dir;
 		std::unique_ptr<FileSystem> _sys;
+
+		/* Append or Construct a directory reference from the current directory
+		str		<<	Directory string
+		ref		<<	Directory reference that is appended
+		return	>>	True if it was a bad directory. False if everything is OK.
+		*/
+		bool constructDirRef(const std::string& str, DirectoryReference& ref);
+
 	public:
 		FileSystemHandle();
 		~FileSystemHandle();
@@ -27,9 +35,9 @@ namespace file {
 		/* Create a file
 		*/
 		void createFile(const std::string& file_name, const std::string& data);
-		/* Remove a file
+		/* Remove a file or directory
 		*/
-		void removeFile(const std::string& file_name);
+		void remove(const std::string& path);
 		/* Get the data in a file
 		*/
 		void printFile(const std::string& file_name);
@@ -41,9 +49,9 @@ namespace file {
 		*/
 		void appendFile(const std::string& toAppendDirectory, const std::string& toAppendFileName, const std::string& appendDataDirectory, const std::string& appendDataFileName);
 
-		/* Moves a file to another directory
+		/* Moves a file or directory to another directory
 		*/
-		void moveFile(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
+		void move(const std::string& sourceDirectory, const std::string& sourceFileName, const std::string& targetDirectory, const std::string& targetFileName);
 
 		/* Returns current working directory
 		*/
