@@ -48,7 +48,7 @@ namespace file {
 		void remove(const std::string& path);
 		/* Get the data in a file
 		*/
-		std::string printFile(const std::string& file_name);
+		std::string getFile(const std::string& file_name);
 		/* Copies a file from a directory to another
 		*/
 		void copyFile(const std::string& sourceDirectory, const std::string& targetDirectory);

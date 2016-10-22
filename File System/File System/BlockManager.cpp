@@ -35,6 +35,26 @@ namespace file {
 	{
 		return _disk;
 	}
+	/* Release blocks allocated for a file. Checks if the parsed blocks are corrupted before removing.
+	blocks			<<	File blocks removed
+	header_block	<<	
+	*/
+	err::FileError BlockManager::releaseFileBlocks(const FileHeader& header, const int header_block) {
+
+		//If block size of the file is not equal to the blocks allocated this file is corrupted.
+		if (numBlocks(header._size) != header._blocks.size())
+			return err::CORRUPTED_FILE;
+
+		//Release blocks in one call
+		std::vector<int> rm_blocks(header._blocks.size() + 1);
+		unsigned int i = 0;
+		for (; i < header._blocks.size(); i++)
+			rm_blocks[i] = header._blocks[i];
+		rm_blocks[i++] = header_block;
+		if (err::bad(_owner->release(rm_blocks)))
+			return err::CORRUPTED_BLOCK;
+		return err::SUCCESS;
+	}
 
 	/* Writes a file object, changing the input variables ONLY if file was written successfully
 	file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.
@@ -59,13 +79,12 @@ namespace file {
 			//Swap back any previous block information
 			std::swap(file._header._blocks, blocks);
 			//Fail: release blocks (data remains but is not attached to the system)
-			_owner->release(blocks);
 			_owner->release(head_block);
+			_owner->release(blocks);
 			return error;
 		}
 		//Set the file reference:
-		created_ref._block = head_block;
-		created_ref._name = file._header._fileName;
+		created_ref = FileReference(file._header._fileName, head_block, file._header._size);
 		return err::SUCCESS;
 	}
 	/* Overwrites a file reference while ensuring old file is intact if an error occured. Releases any extra blocks contained in file on success.  Same guarantee as writeFile(...).
@@ -73,18 +92,16 @@ namespace file {
 	created_ref	<>	File reference, receives the file if write was successfull. Ensured to be intact on failure.
 	*/
 	err::FileError BlockManager::overwriteFile(File& file, FileReference& file_ref) {
-
-		std::vector<int> old_blocks = file._header._blocks;
-		old_blocks.push_back(file_ref._block);
-
+		//Store information of the old file
+		int old_block = file_ref._block;
+		FileHeader old_head = file._header;
 		//Write the new file, ensuring that no state is changed on failure
 		err::FileError error = writeFile(file, file_ref);
 		//If bad error old file is still intact, return.
 		if (err::bad(error))
 			return error;
-		//Release old file
-		_owner->release(old_blocks);
-		return err::SUCCESS;
+		//Release old file.
+		return releaseFileBlocks(old_head, old_block);
 	}
 	/*	Write a file
 	name		<<	Name of the file
@@ -108,13 +125,7 @@ namespace file {
 			return err::NO_READ_ACCESS;
 		if (!header.isWritable())
 			return err::NO_WRITE_ACCESS;
-		if (!header.isValidHeader())
-			return err::CORRUPTED_FILE;
-		//Release data
-		_owner->release(file._block);
-		_owner->release(header._blocks);
-
-		return err::SUCCESS;
+		return releaseFileBlocks(header, file._block);
 	}
 	/*	Read the data from a specified file
 	file	<<	Reference to the file to read from
@@ -175,37 +186,12 @@ namespace file {
 		file.setData(data);
 		//Overwrite the file preserving old file on error
 		return overwriteFile(file, file_to_edit);
-#pragma region Deprecated: Append to old file
-		/*
-		Does not ensure last state is good
-
-		//Release or Allocate more blocks if needed
-		unsigned int numblocks = numBlocks(file._header._size);
-		//Release the extra blocks
-		if (file._header._blocks.size() > numblocks)
-			releaseExtra(numblocks, file._header._blocks);
-		//Allocate more blocks
-		else if (file._header._blocks.size() < numblocks) {
-			error = allocateMore(numblocks, file._header._blocks);
-			if (err::bad(error))
-				return error;
-		}
-
-		//Overwrite the file
-		VirtualWriter writer(_disk);
-		return writer.writeFile(file_to_edit._block, file);
-		if (err::bad(error)) {
-
-			return error;
-		}
-		*/
-#pragma endregion
 	}
 
 
-	/* Rewrite the file header with the specified status
+	/* Rewrite the file header with the specified access status
 	*/
-	err::FileError BlockManager::writeAccess(const FileReference& file, char status) {
+	err::FileError BlockManager::writeAccess(const FileReference& file, char access) {
 		VirtualReader reader(_disk);
 		VirtualWriter writer(_disk);
 		FileHeader header;
@@ -215,7 +201,7 @@ namespace file {
 		if (err::bad(err))
 			return err;
 
-		header._access = status;
+		header._access = access;
 
 		// write updated header
 		err = writer.writeHeader(file._block, header);
@@ -227,10 +213,10 @@ namespace file {
 
 	/* Appends from the first file to the other removing the first file.
 	from	<<	File to append to the other and remove when operation is complete
-	to		<<	Second file that the first file is appended to, reference remains constant
+	to		<>	Second file that the first file is appended to, reference file is overwritten returning a new reference
 	return	>>	If the data contained in the file was successfully appended.
 	*/
-	err::FileError BlockManager::appendFile(FileReference& from, FileReference& to) {
+	err::FileError BlockManager::appendFile(const FileReference& from, FileReference& to) {
 		VirtualReader reader(_disk);
 		//File a is the appended file, b is deleted on success.
 		File file_a, file_b;
@@ -247,20 +233,16 @@ namespace file {
 		if (err::bad(error))
 			return error;
 
-		//Append file, adding occupied blocks and everything
-		file_a.append(file_b);
+		//Create a new file with appended data
+		File new_a(file_a, file_b);
 
 		//Overwrite the file preserving old file's on error
-		error = overwriteFile(file_a, to);
+		error = overwriteFile(new_a, to);
 		if (err::bad(error))
 			return error;
 
-		//Clear deleted file header, the data blocks is appended to file_a and released on overwrite!
-		_owner->release(from._block);
-		from._block = -1;
-		from._name = "";
-
-		return err::SUCCESS;
+		//Release the appended file.
+		return releaseFileBlocks(file_b._header, from._block);
 	}
 	/* Write to stream
 	*/

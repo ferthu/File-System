@@ -247,7 +247,7 @@ err::FileError FileSystem::appendFile(const std::vector<std::string>& from_dir, 
 		return error;
 
 	//Update directories
-	f_dir->removeFile(ref_f); //Not found error ignored.
+	f_dir->removeFile(ref_f); //Not found error ignored!
 	t_dir->addFile(ref_t);
 	return err::SUCCESS;
 }

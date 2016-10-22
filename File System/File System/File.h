@@ -4,6 +4,7 @@
 #include<vector>
 #include<memory>
 #include"FileHeader.h"
+#include"FileReference.h"
 
 namespace file {
 
@@ -11,9 +12,14 @@ namespace file {
 	*/
 	class File
 	{
+	private:
+		/* Append the file
+		*/
+		void appendData(File& other);
 	public:
 		File();
 		File(const std::string& name, char access, const std::string& data);
+		File(const File& file, const File& append);
 		virtual ~File();
 
 		/* The header info of the file.
@@ -31,9 +37,6 @@ namespace file {
 		*/
 		std::string getData();
 
-		/* Append the file
-		*/
-		void append(File& other);
 	};
 
 }

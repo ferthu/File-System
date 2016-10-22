@@ -33,7 +33,7 @@ namespace file {
 	void FileSystemHandle::createFolder(const std::string& name) {
 		err::FileError error = _sys->createFolder(_dir.getDirectory(), name);
 
-		if (err::bad(error))
+		if (err::isError(error))
 		{
 			throw(error);
 		}
@@ -42,7 +42,7 @@ namespace file {
 	*/
 	void FileSystemHandle::createFile(const std::string& file_name, char access, const std::string& data) {
 		err::FileError error = _sys->createFile(_dir.getDirectory(), file_name, access, data);
-		if (err::bad(error))
+		if (err::isError(error))
 		{
 			throw(error);
 		}
@@ -52,24 +52,23 @@ namespace file {
 	void FileSystemHandle::remove(const std::string& path)
 	{
 		err::FileError error = _sys->remove(_dir.getDirectory(), path);
-		if (err::bad(error))
+		if (err::isError(error))
 		{
 			throw(error);
 		}
 	}
 	/* Get the data in a file
 	*/
-	std::string FileSystemHandle::printFile(const std::string& file_name) {
+	std::string FileSystemHandle::getFile(const std::string& file_name) {
 		std::string data;
 		std::string fileName;
 
 		constructDirRefWithFile(file_name, _dir, fileName);
 
 		err::FileError error = _sys->getFile(_dir.getDirectory(), fileName, data);
-		if (err::good(error))
-			return data + "\n";
-		else 
-			throw(error);
+		if (err::bad(error))
+			throw error;
+		return data;
 	}
 	
 	void FileSystemHandle::copyFile(const std::string& sourceDirectory, const std::string& targetDirectory)
@@ -86,7 +85,7 @@ namespace file {
 
 		std::string fileContents;
 		err::FileError err = _sys->copy(source.getDirectory(), sourceFileName, target.getDirectory(), targetFileName);
-		if (err::bad(err))
+		if (err::isError(err))
 		{
 			throw(err);
 		}
@@ -108,7 +107,7 @@ namespace file {
 		std::string appendContents;
 
 		err::FileError err  = _sys->appendFile(appendData.getDirectory(), appendDataFileName, toAppend.getDirectory(), toAppendFileName);
-		if (err::bad(err))
+		if (err::isError(err))
 		{
 			throw(err);
 		}
@@ -129,7 +128,7 @@ namespace file {
 			return;
 
 		err::FileError err = _sys->move(source.getDirectory(), sourceFileName, target.getDirectory(), targetFileName);
-		if (err::bad(err))
+		if (err::isError(err))
 		{
 			throw(err);
 		}
@@ -156,10 +155,8 @@ namespace file {
 
 			return out;
 		}
-		else
-		{
+		if(isError(err))
 			throw(err);
-		}
 	}
 
 	std::string FileSystemHandle::getWorkingPath()
@@ -196,7 +193,7 @@ namespace file {
 		int rights = std::stoi(status);
 
 		err::FileError err = _sys->setRights(_dir.getDirectory(), filename, rights);
-		if (err::bad(err))
+		if (err::isError(err))
 			throw err;
 	}
 

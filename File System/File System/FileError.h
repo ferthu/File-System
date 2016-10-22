@@ -20,13 +20,13 @@ namespace err {
 		FILE_ALREADY_EXIST = 4,
 		/* Occurs if error occured in file system. Where a non-existing file reference was sent to the manager.
 		*/
-		CORRUPTED_FILE = 5,
+		CORRUPTED_FILE = -5,
 		/* Not enough available memory
 		*/
 		MEMORY_OVERFLOW = 6,
 		/* A bad block was sent for release to memory manager 
 		*/
-		CORRUPTED_BLOCK = 7,
+		CORRUPTED_BLOCK = -7,
 		/* File or folder was not found
 		*/
 		NOT_FOUND = 8,
@@ -60,12 +60,22 @@ namespace err {
 	/* Returns if the file error is good
 	*/
 	static bool good(FileError err) {
-		return err == FileError::SUCCESS;
+		return err <= FileError::SUCCESS;
 	}
-	/* Returns if the file error is bad
+	/* Returns if the file error is bad and no change occured in the system.
 	*/
 	static bool bad(FileError err) {
-		return err != FileError::SUCCESS;
+		return err > FileError::SUCCESS;
+	}
+	/* Returns if a error occured but changes was still applied in the system.
+	*/
+	static bool isError(FileError err) {
+		return err != err::SUCCESS;
+	}
+	/* Checks if the error is a system corruption error.
+	*/
+	static bool isSystemError(FileError err) {
+		return err < err::SUCCESS;
 	}
 
 	/* Get a error message

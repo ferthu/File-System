@@ -35,6 +35,6 @@ namespace err {
 			"INVALID_READ_BUFFER - Buffer was not a read buffer",
 			"INVALID_WRITE_BUFFER - Buffer was not a write buffer"
 		};
-		return errors[error];
+		return errors[abs(error)];
 	}
 }

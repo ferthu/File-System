@@ -53,7 +53,7 @@ int main(void) {
 					_handle.createFile(commandArr[1], 4, tmp);
 					break;
 				case 4: // cat
-					std::cout << _handle.printFile(commandArr[1]);
+					std::cout << _handle.getFile(commandArr[1]) << std::endl;
 					break;
 				case 5: // createImage
 					_handle.createImage(commandArr[1]);

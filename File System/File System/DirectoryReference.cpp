@@ -130,6 +130,7 @@ std::string DirectoryReference::directoryAndFileFromString(const DirectoryRefere
 	else
 	{
 		reportStreamError(input);
+		return "Error"; //Code does not reach this point (error is thrown).
 	}
 }
 

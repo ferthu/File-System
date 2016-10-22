@@ -3,7 +3,7 @@
 namespace file {
 
 	Directory::Directory(const std::string& name)
-		: _name(name), _directories(), _files()
+		: _name(name), _directories(), _files(), _byte_size(0), _parent(nullptr)
 	{
 	}
 
@@ -24,6 +24,25 @@ namespace file {
 		}
 		return -1;
 	}
+
+	/* Update a change in byte size
+	difference	<<	Byte size the directory is changed with
+	*/
+	void Directory::updateSize(int difference) {
+		_byte_size += difference;
+		if(_parent)
+			_parent->updateSize(difference);
+	}
+
+	/* Removes a specific directory from index.
+	i			<<	Index to remove
+	byte_size	<<	The byte size of the directory
+	*/
+	void Directory::removeDirectory(int i, int byte_size) {
+		updateSize(-byte_size);
+		_directories.erase(_directories.begin() + i);
+	}
+
 	/* Access a directory. Returns the file node reference of the accessed directory or directory node an error occured.
 	*/
 	DirectoryAccess Directory::accessDirectory(const std::vector<std::string>& directory, unsigned int traversal_lvl) {
@@ -43,6 +62,7 @@ namespace file {
 	/* Add a child directory to the node
 	*/
 	void Directory::addDirectory(std::unique_ptr<Directory>& child) {
+		child->_parent = this;
 		_directories.push_back(std::move(child));
 	}
 	/* Remove a child directory in the node
@@ -52,7 +72,7 @@ namespace file {
 	err::FileError Directory::removeDirectory(const std::string& name) {
 		int dir_index = getDirectory(name);
 		if (dir_index >= 0) {
-			_directories.erase(_directories.begin() + dir_index);
+			removeDirectory(dir_index, _directories[dir_index]->_byte_size);
 			return err::SUCCESS;
 		}
 		return err::FOLDER_DOES_NOT_EXIST;
@@ -63,13 +83,14 @@ namespace file {
 		int dir_index = getDirectory(name);
 		if (dir_index >= 0) {
 			_directories[dir_index]->_name = new_name;
+			int byte_size = _directories[dir_index]->_byte_size;
 			move_to.addDirectory(_directories[dir_index]);
-			_directories.erase(_directories.begin() + dir_index);
+			removeDirectory(dir_index, byte_size);
 			return err::SUCCESS;
 		}
 		FileReference ref;
 		if (err::good(getFile(name, ref))) {
-			move_to.addFile(FileReference(new_name, ref._block));
+			move_to.addFile(FileReference(new_name, ref._block, ref._byte_size));
 			removeFile(ref);
 			return err::SUCCESS;
 		}
@@ -98,6 +119,7 @@ namespace file {
 		removeFile(ref);
 		//Add new reference
 		_files.push_back(ref);
+		updateSize(ref._byte_size);
 	}
 	/* Remove a file
 	ref		<<	Reference to the file
@@ -106,6 +128,7 @@ namespace file {
 	err::FileError Directory::removeFile(const FileReference& ref) {
 		for (size_t i = 0; i < _files.size(); i++) {
 			if (_files[i] == ref._name) {
+				updateSize(-(int)_files[i]._byte_size);
 				_files.erase(_files.begin() + i);
 				return err::SUCCESS;
 			}
@@ -117,7 +140,7 @@ namespace file {
 	std::vector<std::string> Directory::getFileNames() {
 		std::vector<std::string> names(_files.size());
 		for (size_t i = 0; i < _files.size(); i++)
-			names[i] = _files[i]._name;
+			names[i] = _files[i]._name + "\t" + std::to_string(_files[i]._byte_size);
 		return names;
 	}
 	/* Get the names of the child directories
@@ -126,7 +149,7 @@ namespace file {
 		std::vector<std::string> names(_directories.size());
 		for (size_t i = 0; i < _directories.size(); i++)
 		{
-			names[i] = _directories[i]->_name;
+			names[i] = _directories[i]->_name + "\t" + std::to_string(_directories[i]->_byte_size);
 		}
 		return names;
 	}
@@ -152,6 +175,7 @@ namespace file {
 		for (int i = 0; i < _files.size(); i++) {
 			writer.writeString(_files[i]._name);
 			writer.writeInt(_files[i]._block);
+			writer.writeUInt(_files[i]._byte_size);
 		}
 		//Write directories
 		writer.writeUInt((unsigned int)_directories.size());
@@ -169,6 +193,7 @@ namespace file {
 			FileReference ref;
 			ref._name = reader.readString();
 			ref._block = reader.readInt();
+			ref._byte_size = reader.readUInt();
 			dir->addFile(ref);
 		}
 		//Read child directories

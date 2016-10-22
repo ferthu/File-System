@@ -39,10 +39,6 @@ namespace file {
 		bool isWritable() const {
 			return _access == 1 || _access > 2;
 		}
-		/* Verify this is a header */
-		bool isValidHeader() const {
-			return true;
-		}
 	};
 
 }

@@ -20,6 +20,17 @@ namespace file {
 		/* Name of this directory level
 		*/
 		std::string _name;
+		/* Size in bytes of all files in this and following directories.
+		*/
+		unsigned int _byte_size;
+		/* Pointer reference to the parent can be null (in root node)
+		*/
+		Directory* _parent;
+		/* Update a change in byte size
+		difference	<<	Byte size the directory is changed with
+		*/
+		void updateSize(int difference);
+
 		/* References to the child directories
 		*/
 		std::vector<std::unique_ptr<Directory>> _directories;
@@ -29,8 +40,14 @@ namespace file {
 		/* Compares a directory name
 		*/
 		bool compareDirectoryName(const std::string& dir_name);
-
+		/* Find a directory. Returning the index in the directory list.
+		*/
 		int getDirectory(const std::string& dir_name);
+		/* Removes a specific directory from index. 
+		i			<<	Index to remove
+		byte_size	<<	The byte size of the directory 
+		*/
+		void removeDirectory(int i, int byte_size);
 	public:
 		Directory(const std::string& name);
 		virtual ~Directory();

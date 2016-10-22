@@ -10,6 +10,15 @@ namespace file {
 	: _header(name, access, (unsigned int)data.size()) , _data() {
 		setData(data);
 	}
+	File::File(const File& file, const File& append)
+		: _header(file._header._fileName, file._header._access, file._header._size + append._header._size), _data() {
+		//Copy data
+		char* data = new char[_header._size];
+		std::memcpy(data, _data.get(), file._header._size); //Copy this
+		std::memcpy(data + file._header._size, append._data.get(), append._header._size); //Append other
+		//Set data
+		_data = std::unique_ptr<char>(data);
+	}
 
 	File::~File()
 	{	}
@@ -31,18 +40,6 @@ namespace file {
 
 	/* Append the file
 	*/
-	void File::append(File& other) {
-		//Append blocks
-		for (unsigned int i = 0; i < other._header._blocks.size(); i++)
-			_header._blocks.push_back(other._header._blocks[i]);
-		//Append data
-		unsigned int newsize = 	_header._size + other._header._size;
-		char* data = new char[newsize];
-		//Copy this
-		std::memcpy(data, _data.get(), _header._size);
-		//Append other
-		std::memcpy(data + _header._size, other._data.get(), other._header._size);
-		//Set
-		_data = std::unique_ptr<char>(data);
+	void File::appendData(File& other) {
 	}
 }

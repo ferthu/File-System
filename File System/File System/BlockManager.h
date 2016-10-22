@@ -45,6 +45,11 @@ namespace file {
 		created_ref	<>	File reference, receives the file if write was successfull. Ensured to be intact on failure.
 		*/
 		err::FileError overwriteFile(File& file, FileReference& file_ref);
+		/* Release blocks allocated for a file. Checks if the parsed blocks are corrupted before removing.
+		header			<<	File header containing the blocks to release and byte size.
+		header_block	<<	Block file header is stored in.
+		*/
+		err::FileError releaseFileBlocks(const FileHeader& header, const int header_block);
 
 #pragma region Deprecated: No incrementing! New write preserves state on failure!
 
@@ -96,14 +101,14 @@ namespace file {
 		err::FileError readFile(const FileReference& file, std::string& data);
 		/* Appends from the first file to the other removing the first file.
 		from	<<	File to append to the other and remove when operation is complete
-		to		<<	Second file that the first file is appended to, reference remains constant
+		to		<>	Second file that the first file is appended to, reference file is overwritten returning a new reference
 		return	>>	If the data contained in the file was successfully appended.
 		*/
-		err::FileError appendFile(FileReference& from, FileReference& to);
+		err::FileError appendFile(const FileReference& from, FileReference& to);
 
-		/* Rewrite the file header with the specified status
+		/* Rewrite the file header with the specified access status
 		*/
-		err::FileError writeAccess(const FileReference& file, char status);
+		err::FileError writeAccess(const FileReference& file, char access);
 
 		/* Remove any data related to the file reference. Any data will be removed regardless if all information exists or not.
 		file	<<	File reference to be removed
