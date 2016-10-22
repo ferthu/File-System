@@ -26,7 +26,7 @@ namespace file {
 
 	bool FileSystemHandle::constructDirRefWithFile(const std::string& str, DirectoryReference& ref, std::string& filename)
 	{
-		filename = ref.directoryAndFileFromString(_dir, str, *_sys);
+		ref.directoryAndFileFromString(_dir, str, *_sys, filename);
 
 		return false;
 	}

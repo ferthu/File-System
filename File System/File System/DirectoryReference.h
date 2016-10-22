@@ -10,8 +10,6 @@ class DirectoryReference
 {
 private:
 	void reportStreamError(const std::stringstream& stream);
-	void addToDirectory(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize, const FileSystem& fs);
-	std::string addToDirectoryWithFile(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize, const FileSystem& fs);
 
 	std::vector<std::string> directory;
 	const unsigned int directoryMaxLength = 100;
@@ -28,7 +26,7 @@ public:
 	void directoryFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs);
 
 	// creates and stores a directory from a string (relative or absolute), treats last entry as a file and returns it
-	std::string directoryAndFileFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs);
+	void directoryAndFileFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs, std::string& file);
 
 	// adds folder named in string to directory
 	void addDirectory(const std::string str);

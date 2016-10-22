@@ -19,48 +19,58 @@ void DirectoryReference::directoryFromString(const DirectoryReference& currentDi
 	{
 		// absolute path
 		if (input.peek() == delimChar)
-		{
-			addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
-		}
-		// reference to current or parent directory
-		else if (input.peek() == specialReferenceChar)
-		{
-			// remove first dot
-			removeCharacter(input, specialReferenceChar);
+			removeCharacter(input, delimChar);
 
-			// two dots reference parent directory
-			if (input.peek() == specialReferenceChar)
-			{
-				// remove dot
-				removeCharacter(input, specialReferenceChar);
-
-				newDirectory = currentDirectory.getDirectory();
-
-				// remove lowest directory to obtain parent
-				if (newDirectory.size() > 0)
-					newDirectory.pop_back();
-
-				addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
-
-			}
-			// one dot references current directory
-			else
-			{
-				removeCharacter(input, delimChar);
-
-				newDirectory = currentDirectory.getDirectory();
-
-				addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
-			}
-		}
+		// relative path, begin at current directory
 		else
-		{
-			// relative path
 			newDirectory = currentDirectory.getDirectory();
 
-			addToDirectory(newDirectory, input, delimChar, directoryMaxLength, fs);
-		}
+		if (input.good())
+		{
+			const int dirMaxSize = 100;
+			char* dir = new char[dirMaxSize];
 
+			while (input.good())
+			{
+				// remove delim character
+				removeCharacter(input, delimChar);
+
+				if (input.good())
+				{
+					input.get(dir, dirMaxSize, delimChar);
+					if (dir[0] == specialReferenceChar)
+					{
+						if (dir[1] == specialReferenceChar)
+						{
+							// references parent directory
+							if (!newDirectory.empty())
+								newDirectory.pop_back();
+						}
+						else if (dir[1] == delimChar)
+						{
+							// references this directory, do nothing
+						}
+					}
+					else
+					{
+						// check if directory exists
+						newDirectory.push_back(std::string(dir));
+						err::FileError err;
+						if (err::bad(err = fs.directoryExists(newDirectory)))
+						{
+							newDirectory.pop_back();
+							throw err;
+						}
+					}
+				}
+			}
+
+			delete[] dir;
+
+			if (!input.eof())
+				throw std::invalid_argument("Error: string error\n");
+		}
+		// set directory of this instance to the found directory
 		directory = newDirectory;
 	}
 	else
@@ -69,68 +79,79 @@ void DirectoryReference::directoryFromString(const DirectoryReference& currentDi
 	}
 }
 
-std::string DirectoryReference::directoryAndFileFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs)
+void DirectoryReference::directoryAndFileFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs, std::string& file)
 {
 	std::stringstream input(str);
 
 	std::vector<std::string> newDirectory;
 
-	std::string file;
-
 	if (input.good())
 	{
 		// absolute path
 		if (input.peek() == delimChar)
-		{
-			file = addToDirectoryWithFile(newDirectory, input, delimChar, directoryMaxLength, fs);
-		}
-		// reference to current or parent directory
-		else if (input.peek() == specialReferenceChar)
-		{
-			// remove first dot
-			removeCharacter(input, specialReferenceChar);
+			removeCharacter(input, delimChar);
 
-			// two dots reference parent directory
-			if (input.peek() == specialReferenceChar)
-			{
-				// remove dot
-				removeCharacter(input, specialReferenceChar);
-
-				newDirectory = currentDirectory.getDirectory();
-
-				// remove lowest directory to obtain parent
-				if (newDirectory.size() > 0)
-					newDirectory.pop_back();
-
-				file = addToDirectoryWithFile(newDirectory, input, delimChar, directoryMaxLength, fs);
-
-			}
-			// one dot references current directory
-			else
-			{
-				removeCharacter(input, delimChar);
-
-				newDirectory = currentDirectory.getDirectory();
-
-				file = addToDirectoryWithFile(newDirectory, input, delimChar, directoryMaxLength, fs);
-			}
-		}
+		// relative path, begin at current directory
 		else
-		{
-			// relative path
 			newDirectory = currentDirectory.getDirectory();
 
-			file = addToDirectoryWithFile(newDirectory, input, delimChar, directoryMaxLength, fs);
+		if (input.good())
+		{
+			const int dirMaxSize = 100;
+			char* dir = new char[dirMaxSize];
+
+			while (input.good())
+			{
+				// remove delim character
+				removeCharacter(input, delimChar);
+
+				if (input.good())
+				{
+					input.get(dir, dirMaxSize, delimChar);
+
+					if (input.eof())
+					{
+						// this is the last entry, witch refers to a file
+						file = dir;
+					}
+					else if (dir[0] == specialReferenceChar)
+					{
+						if (dir[1] == specialReferenceChar)
+						{
+							// references parent directory
+							if (!newDirectory.empty())
+								newDirectory.pop_back();
+						}
+						else if (dir[1] == delimChar)
+						{
+							// references this directory, do nothing
+						}
+					}
+					else
+					{
+						// check if directory exists
+						newDirectory.push_back(std::string(dir));
+						err::FileError err;
+						if (err::bad(err = fs.directoryExists(newDirectory)))
+						{
+							newDirectory.pop_back();
+							throw err;
+						}
+					}
+				}
+			}
+
+			delete[] dir;
+
+			if (!input.eof())
+				throw std::invalid_argument("Error: string error\n");
 		}
-
+		// set directory of this instance to the found directory
 		directory = newDirectory;
-
-		return file;
 	}
 	else
 	{
 		reportStreamError(input);
-		return "Error"; //Code does not reach this point (error is thrown).
 	}
 }
 
@@ -142,95 +163,6 @@ void DirectoryReference::reportStreamError(const std::stringstream& stream)
 	// other error
 	else
 		throw std::invalid_argument("Error: string error\n");
-}
-
-void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize, const FileSystem& fs)
-{
-	if (toAdd.peek() == -1)
-		return;
-
-	if (toAdd.good())
-	{
-		char* dir = new char[dirMaxSize];
-
-		while (toAdd.good())
-		{
-			// remove delim character
-			removeCharacter(toAdd, delimChar);
-
-			if (toAdd.good())
-			{
-				toAdd.get(dir, dirMaxSize, delim);
-
-				// check if directory exists
-				directory.push_back(std::string(dir));
-				err::FileError err;
-				if (err::bad(err = fs.directoryExists(directory)))
-				{
-					throw err;
-				}					
-			}
-		}
-
-		delete[] dir;
-
-		if (!toAdd.eof())
-			throw std::invalid_argument("Error: string error\n");
-	}
-	else
-		throw std::invalid_argument("Error: addToDirectory received bad input\n");
-}
-
-std::string DirectoryReference::addToDirectoryWithFile(std::vector<std::string>& directory, std::stringstream& toAdd, const char& delim, const unsigned int& dirMaxSize, const FileSystem& fs)
-{
-	if (toAdd.peek() == -1)
-		throw std::invalid_argument("Error: bad directory\n");
-
-	std::string file;
-
-	if (toAdd.good())
-	{
-		char* dir = new char[dirMaxSize];
-
-		while (toAdd.good())
-		{
-			// remove delim character
-			removeCharacter(toAdd, delimChar);
-
-			if (toAdd.good())
-			{
-				toAdd.get(dir, dirMaxSize, delim);
-
-				if (toAdd.eof())
-				{
-					// this entry refers to a file
-					file = dir;
-				}
-				else
-				{
-					// check if directory exists
-					std::vector<std::string> dirs;
-
-					err::FileError err;
-					if (err::good(err = fs.directoryExists(directory)))
-					{
-						directory.push_back(std::string(dir));
-					}
-					else
-						throw err;
-				}
-			}
-		}
-
-		delete[] dir;
-
-		if (!toAdd.eof())
-			throw std::invalid_argument("Error: string error\n");
-
-		return file;
-	}
-	else
-		throw std::invalid_argument("Error: addToDirectoryWithFile received bad input\n");
 }
 
 void DirectoryReference::addDirectory(const std::string str)
