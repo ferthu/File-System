@@ -165,11 +165,16 @@ void DirectoryReference::reportStreamError(const std::stringstream& stream)
 		throw std::invalid_argument("Error: string error\n");
 }
 
-void DirectoryReference::addDirectory(const std::string str)
+void DirectoryReference::addDirectory(const std::string str, const FileSystem& fs)
 {
-	// TODO: check if directory exists
-
 	directory.push_back(str);
+
+	err::FileError err;
+	if (err::bad(err = fs.directoryExists(this->getDirectory())))
+	{
+		directory.pop_back();
+		throw(err);
+	}
 }
 
 void DirectoryReference::removeDirectory()

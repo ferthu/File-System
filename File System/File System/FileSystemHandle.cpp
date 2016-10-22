@@ -31,13 +31,40 @@ namespace file {
 		return false;
 	}
 
-	void FileSystemHandle::createFolder(const std::string& name) {
-		err::FileError error = _sys->createFolder(_dir.getDirectory(), name);
+	void FileSystemHandle::createFolder(const std::string& name)
+	{
+		DirectoryReference createDirectory = _dir;
+		std::stringstream input(name);
 
-		if (err::isError(error))
+		const int dirMaxSize = 100;
+		char* dir = new char[dirMaxSize];
+		err::FileError error;
+
+		do
 		{
-			throw(error);
-		}
+			input.get(dir, dirMaxSize, delimChar);
+			createDirectory.removeCharacter(input, delimChar);
+			try
+			{
+				createDirectory.addDirectory(std::string(dir), *_sys);
+			}
+			catch (err::FileError e)
+			{
+				if (e == err::DIRECTORY_DOES_NOT_EXIST)
+				{
+					//create folder
+					error = _sys->createFolder(createDirectory.getDirectory(), std::string(dir));
+					createDirectory.addDirectory(std::string(dir), *_sys);
+				}
+				else
+				{
+					delete dir;
+					throw(error);
+				}
+			}
+		} while (!input.eof());
+
+		delete dir;
 	}
 	/* Create a file
 	*/

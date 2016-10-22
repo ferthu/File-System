@@ -29,7 +29,7 @@ public:
 	void directoryAndFileFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs, std::string& file);
 
 	// adds folder named in string to directory
-	void addDirectory(const std::string str);
+	void addDirectory(const std::string str, const FileSystem& fs);
 
 	// removes one folder from directory
 	void removeDirectory();

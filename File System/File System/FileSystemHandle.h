@@ -13,6 +13,8 @@ namespace file {
 		DirectoryReference _dir;
 		std::unique_ptr<FileSystem> _sys;
 
+		const char delimChar = '/';
+
 		/* Append or Construct a directory reference from the current directory
 		str		<<	Directory string
 		ref		<<	Directory reference that is appended
