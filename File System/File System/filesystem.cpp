@@ -57,22 +57,14 @@ err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const 
 	return f_dir->moveChild(from_name, move_name, *m_dir._directory);
 }
 
-/* This function will get all the files and folders in the specified folder */
-err::FileError FileSystem::listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) const {
+/* This function will get all the files and folders in the specified directory and append it to the stream */
+err::FileError FileSystem::listDir(const std::vector<std::string>& directory, std::stringstream& info) const {
 	file::DirectoryAccess dir = _root.accessDirectory(directory);
 	if (dir.access()) {
-		std::vector<std::string> tmp;
 		//Get directories
-		tmp = dir->getDirectoryNames();
-		list.assign(tmp.begin(), tmp.end());
-
-		// add slash to separate files from directories
-		for (int i = 0; i < list.size(); i++)
-			list[i].append("/");
-
+		dir->getDirectoryInfo(info);
 		//Get files
-		tmp = dir->getFileNames();
-		list.insert(list.end(), tmp.begin(), tmp.end());
+		dir->getFileInfo(info);
 		return err::SUCCESS;
 	}
 	return dir.getError();
@@ -81,6 +73,13 @@ err::FileError FileSystem::listDir(const std::vector<std::string>& directory, st
 #pragma endregion
 
 #pragma region Directory Functions
+
+/* Check if the directory exist
+*/
+err::FileError FileSystem::directoryExists(const std::vector<std::string>& directory) {
+
+	return err::DIRECTORY_DOES_NOT_EXIST;
+}
 
 /* Creates a folder in the filesystem */
 err::FileError FileSystem::createFolder(const std::vector<std::string>& directory, const std::string& folder_name) {
@@ -104,18 +103,6 @@ err::FileError FileSystem::rmFolder(file::DirectoryAccess& dir, const std::strin
 	return dir.getError();
 }
 
-err::FileError FileSystem::listDirOnly(const std::vector<std::string>& directory, std::vector<std::string>& list) const
-{
-	file::DirectoryAccess dir = _root.accessDirectory(directory);
-	if (dir.access()) {
-		std::vector<std::string> tmp;
-		//Get directories
-		tmp = dir->getDirectoryNames();
-		list.assign(tmp.begin(), tmp.end());
-		return err::SUCCESS;
-	}
-	return dir.getError();
-}
 
 #pragma endregion
 

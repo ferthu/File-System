@@ -137,21 +137,15 @@ namespace file {
 	}
 	/* Get the file names
 	*/
-	std::vector<std::string> Directory::getFileNames() {
-		std::vector<std::string> names(_files.size());
+	void Directory::getFileInfo(std::stringstream& stream) {
 		for (size_t i = 0; i < _files.size(); i++)
-			names[i] = _files[i]._name + "\t" + std::to_string(_files[i]._byte_size);
-		return names;
+			stream << _files[i]._name << "/\t" << _files[i]._byte_size;
 	}
 	/* Get the names of the child directories
 	*/
-	std::vector<std::string> Directory::getDirectoryNames() {
-		std::vector<std::string> names(_directories.size());
+	void Directory::getDirectoryInfo(std::stringstream& stream) {
 		for (size_t i = 0; i < _directories.size(); i++)
-		{
-			names[i] = _directories[i]->_name + "\t" + std::to_string(_directories[i]->_byte_size);
-		}
-		return names;
+			stream << _directories[i]->_name << "/\t" << _directories[i]->_byte_size;
 	}
 	/* Get if the name is a directory or a file type
 	*/

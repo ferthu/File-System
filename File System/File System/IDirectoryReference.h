@@ -6,6 +6,7 @@
 #include"FileReference.h"
 #include"FileError.h"
 #include"DirectoryType.h"
+#include<sstream>
 
 namespace file {
 
@@ -42,10 +43,10 @@ namespace file {
 		virtual err::FileError removeFile(const FileReference& ref) = 0;
 		/* Get the file names
 		*/
-		virtual std::vector<std::string> getFileNames() = 0;
-		/* Get the names of the child directories
+		virtual void getFileInfo(std::stringstream& stream) = 0;
+		/* Get the info of the child directories
 		*/
-		virtual std::vector<std::string> getDirectoryNames() = 0;
+		virtual void getDirectoryInfo(std::stringstream& stream) = 0;
 
 		/* Get if the name is a directory or a file type
 		*/

@@ -4,6 +4,7 @@
 #include "memblockdevice.h"
 #include"DirectoryTree.h"
 #include"BlockManager.h"
+#include<sstream>
 
 class FileSystem
 {
@@ -30,7 +31,9 @@ public:
      * However, you are free to change the parameterlist and specify your own returntype for each function below.
      */
 
-
+	/* Check if the directory exist
+	*/
+	err::FileError directoryExists(const std::vector<std::string>& directory);
     /* Creates a folder in the filesystem 
 	*/
 	err::FileError createFolder(const std::vector<std::string>& directory, const std::string& folder_name);
@@ -56,13 +59,9 @@ public:
 	*/
 	err::FileError move(const std::vector<std::string>& from_dir, const std::string& from_name, const std::vector<std::string>& move_dir, const std::string& move_name);
 
-    /* This function will get all the files and folders in the specified folder 
-	*/
-    err::FileError listDir(const std::vector<std::string>& directory, std::vector<std::string>& list) const;
+	/* This function will get all the files and folders in the specified directory and append it to the stream */
+    err::FileError listDir(const std::vector<std::string>& directory, std::stringstream& info) const;
 
-	/* This function will get all the folders in the specified folder
-	*/
-	err::FileError listDirOnly(const std::vector<std::string>& directory, std::vector<std::string>& list) const;
 	/* Set the specific rights of the file
 	directory	<<	Directory of the file to append.
 	file_name	<<	Name of the file to be appended, removed on success.

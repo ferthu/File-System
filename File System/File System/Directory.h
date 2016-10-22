@@ -80,10 +80,10 @@ namespace file {
 		virtual err::FileError removeFile(const FileReference& ref);
 		/* Get the file names
 		*/
-		virtual std::vector<std::string> getFileNames();
-		/* Get the names of the child directories
+		virtual void getFileInfo(std::stringstream& stream);
+		/* Get the info of the child directories
 		*/
-		virtual std::vector<std::string> getDirectoryNames();
+		virtual void getDirectoryInfo(std::stringstream& stream);
 
 		/* Get if the name is a directory or a file type
 		*/

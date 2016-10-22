@@ -1,5 +1,6 @@
 #include "FileSystemHandle.h"
 #include"FileError.h"
+#include<sstream>
 
 namespace file {
 
@@ -135,28 +136,15 @@ namespace file {
 	}
 
 	std::string FileSystemHandle::listDirectory() {
-		std::vector<std::string> list;
-		std::string out;
-		err::FileError err = _sys->listDir(_dir.getDirectory(), list);
-
-		if (err::good(err))
-		{
-			size_t size = list.size();
-
-			if (size > 0)
-				out += "Listing directory:\n";
-			else
-				out += "Empty directory.\n";
-
-			for (int i = 0; i < size; i++)
-			{
-				out += list[i] + "\n";
-			}
-
-			return out;
-		}
-		if(isError(err))
+		std::stringstream stream;
+		err::FileError err = _sys->listDir(_dir.getDirectory(), stream);
+		//Check error
+		if (isError(err))
 			throw(err);
+		//Check empty
+		if (stream.tellp() > 0)
+			return "Empty directory.\n";
+		return stream.str();
 	}
 
 	std::string FileSystemHandle::getWorkingPath()

@@ -14,7 +14,7 @@ namespace file {
 		: _header(file._header._fileName, file._header._access, file._header._size + append._header._size), _data() {
 		//Copy data
 		char* data = new char[_header._size];
-		std::memcpy(data, _data.get(), file._header._size); //Copy this
+		std::memcpy(data, file._data.get(), file._header._size); //Copy this
 		std::memcpy(data + file._header._size, append._data.get(), append._header._size); //Append other
 		//Set data
 		_data = std::unique_ptr<char>(data);
