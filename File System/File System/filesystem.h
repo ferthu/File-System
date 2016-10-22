@@ -33,7 +33,7 @@ public:
 
 	/* Check if the directory exist
 	*/
-	err::FileError directoryExists(const std::vector<std::string>& directory);
+	err::FileError directoryExists(const std::vector<std::string>& directory) const;
     /* Creates a folder in the filesystem 
 	*/
 	err::FileError createFolder(const std::vector<std::string>& directory, const std::string& folder_name);

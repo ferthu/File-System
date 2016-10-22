@@ -76,9 +76,11 @@ err::FileError FileSystem::listDir(const std::vector<std::string>& directory, st
 
 /* Check if the directory exist
 */
-err::FileError FileSystem::directoryExists(const std::vector<std::string>& directory) {
+err::FileError FileSystem::directoryExists(const std::vector<std::string>& directory) const
+{
+	file::DirectoryAccess dir = _root.accessDirectory(directory);
 
-	return err::DIRECTORY_DOES_NOT_EXIST;
+	return dir.getError();
 }
 
 /* Creates a folder in the filesystem */

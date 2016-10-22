@@ -143,8 +143,8 @@ namespace file {
 			throw(err);
 		//Check empty
 		if (stream.tellp() > 0)
-			return "Empty directory.\n";
-		return stream.str();
+			return stream.str();
+		return "Empty directory.\n";
 	}
 
 	std::string FileSystemHandle::getWorkingPath()

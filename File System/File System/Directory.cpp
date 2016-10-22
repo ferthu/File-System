@@ -139,13 +139,13 @@ namespace file {
 	*/
 	void Directory::getFileInfo(std::stringstream& stream) {
 		for (size_t i = 0; i < _files.size(); i++)
-			stream << _files[i]._name << "/\t" << _files[i]._byte_size;
+			stream << _files[i]._name << "\t" << _files[i]._byte_size << " bytes" << std::endl;
 	}
 	/* Get the names of the child directories
 	*/
 	void Directory::getDirectoryInfo(std::stringstream& stream) {
 		for (size_t i = 0; i < _directories.size(); i++)
-			stream << _directories[i]->_name << "/\t" << _directories[i]->_byte_size;
+			stream << _directories[i]->_name << "/\t" << _directories[i]->_byte_size << " bytes" << std::endl;
 	}
 	/* Get if the name is a directory or a file type
 	*/

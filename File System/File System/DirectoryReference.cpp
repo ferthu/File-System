@@ -163,17 +163,10 @@ void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std
 				toAdd.get(dir, dirMaxSize, delim);
 
 				// check if directory exists
-				std::vector<std::string> dirs;
-
 				err::FileError err;
-				if (err::good(err = fs.listDirOnly(directory, dirs)))
+				if (err::good(err = fs.directoryExists(directory)))
 				{
-					if (std::find(dirs.begin(), dirs.end(), dir) != dirs.end())
-					{
-						directory.push_back(std::string(dir));
-					}
-					else
-						throw std::invalid_argument("Error: directory not found\n");
+					directory.push_back(std::string(dir));
 				}
 				else
 					throw err;
@@ -220,16 +213,10 @@ std::string DirectoryReference::addToDirectoryWithFile(std::vector<std::string>&
 					std::vector<std::string> dirs;
 
 					err::FileError err;
-					if (err::good(err = fs.listDirOnly(directory, dirs)))
+					if (err::good(err = fs.directoryExists(directory)))
 					{
-						if (std::find(dirs.begin(), dirs.end(), dir) != dirs.end())
-						{
-							directory.push_back(std::string(dir));
-						}
-						else
-							throw std::invalid_argument("Error: directory not found\n");
+						directory.push_back(std::string(dir));
 					}
-
 					else
 						throw err;
 				}
