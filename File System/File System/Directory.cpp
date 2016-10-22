@@ -63,6 +63,7 @@ namespace file {
 	*/
 	void Directory::addDirectory(std::unique_ptr<Directory>& child) {
 		child->_parent = this;
+		updateSize(child->_byte_size);
 		_directories.push_back(std::move(child));
 	}
 	/* Remove a child directory in the node

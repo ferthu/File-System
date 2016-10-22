@@ -120,7 +120,6 @@ namespace file {
 		//Open next read buffer in queue and pop it.
 		if (!bufferNext())
 			return traits_type::eof();
-		_block_queue.pop();
 		return *gptr();
 	}
 	/* Buffer a block for reading
