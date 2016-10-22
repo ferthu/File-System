@@ -2,6 +2,8 @@
 
 #include"BinaryFileWriter.h"
 #include"BinaryFileReader.h"
+#include"VirtualReader.h"
+#include"VirtualWriter.h"
 
 FileSystem::FileSystem()
 	: _root(std::unique_ptr<file::Directory>(new file::Directory("Root"))), _manager() {
@@ -42,6 +44,14 @@ err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const 
 	file::DirectoryAccess m_dir = _root.accessDirectory(move_dir);
 	if (!m_dir.access())
 		return m_dir.getError();
+
+	file::FileReference fr;
+	file::FileHeader fh;
+	f_dir->getFile(from_name, fr);
+	file::VirtualReader reader(_manager.getDisk());
+	reader.readHeader(fr._block, fh);
+	if (!fh.isReadable())
+		return err::NO_READ_ACCESS;
 
 	//Move
 	return f_dir->moveChild(from_name, move_name, *m_dir._directory);

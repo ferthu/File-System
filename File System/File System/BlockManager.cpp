@@ -31,6 +31,10 @@ namespace file {
 		return (int)(bytes / _block_size + (bytes % (bytes + 1) > 0));
 	}
 
+	MemBlockDevice& BlockManager::getDisk()
+	{
+		return _disk;
+	}
 
 	/* Writes a file object, changing the input variables ONLY if file was written successfully
 	file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.

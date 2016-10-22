@@ -27,7 +27,7 @@ namespace file {
 		/* Size of each block
 		*/
 		const unsigned int _block_size = 512;
-
+		
 		/* Get the number of blocks required to hold a set of bytes
 		*/
 		unsigned int numBlocks(size_t bytes);
@@ -60,7 +60,7 @@ namespace file {
 		BlockManager(const BlockManager& manager) = delete;
 		BlockManager& operator=(const BlockManager& manager) = delete;
 	public:
-
+		MemBlockDevice& getDisk();
 
 		BlockManager(unsigned int num_blocks = 512);
 		BlockManager(BlockManager&& manager);
