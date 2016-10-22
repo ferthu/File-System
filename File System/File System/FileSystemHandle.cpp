@@ -194,9 +194,14 @@ namespace file {
 
 	/* Reads an image of file system
 	*/
-	void FileSystemHandle::readImage(const std::string fileName)
-	{
-		_sys = FileSystem::readImage(fileName);
+	bool FileSystemHandle::readImage(const std::string fileName)
+	{	
+		std::unique_ptr<FileSystem> sys = FileSystem::readImage(fileName);
+		if (sys != nullptr) {
+			_sys = std::move(sys);
+			return true;
+		}
+		return false;
 	}
 
 

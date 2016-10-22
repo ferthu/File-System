@@ -72,8 +72,9 @@ namespace file {
 		void createImage(const std::string fileName);
 
 		/* Reads an image of file system
+		return	>> If succesfull load
 		*/
-		void readImage(const std::string fileName);
+		bool readImage(const std::string fileName);
 
 		/* Empties file system
 		*/

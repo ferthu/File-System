@@ -59,7 +59,10 @@ int main(void) {
 					_handle.createImage(commandArr[1]);
 					break;
 				case 6: // restoreImage
-					_handle.readImage(commandArr[1]);
+					if (_handle.readImage(commandArr[1]))
+						std::cout << "Filesystem loaded successfully." << std::endl;
+					else 
+						std::cout << "Error occured trying to read a stored image, verify file exists." << std::endl;
 					break;
 				case 7: // rm
 					_handle.remove(commandArr[1]);

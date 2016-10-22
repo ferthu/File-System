@@ -283,16 +283,22 @@ void FileSystem::writeImage(const std::string& name) {
 	}
 	return;
 }
-/* Read a copy of the file system from an image on the disk.
+/* Read a copy of the file system from an image on the disk. Null if file failed to load.
+name	<<	File name
+return	<<	FileSystem read from the file or null if error occured.
 */
 std::unique_ptr<FileSystem> FileSystem::readImage(const std::string& name) {
 	mf::BinaryFileReader reader;
 	if (reader.openFile(name)) {
-		//Read directory tree
-		file::DirectoryTree root = file::DirectoryTree::readFromStream(reader);
-		//Read block manager
-		file::BlockManager manager = file::BlockManager::readFromStream(reader);
-		return std::unique_ptr<FileSystem>(new FileSystem(root, manager));
+		try {
+			//Read directory tree
+			file::DirectoryTree root = file::DirectoryTree::readFromStream(reader);
+			//Read block manager
+			file::BlockManager manager = file::BlockManager::readFromStream(reader);
+			return std::unique_ptr<FileSystem>(new FileSystem(root, manager));
+		}
+		catch (const std::exception& e){	
+		}
 	}
 	return std::unique_ptr<FileSystem>();
 }
