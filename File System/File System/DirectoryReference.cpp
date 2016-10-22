@@ -163,13 +163,12 @@ void DirectoryReference::addToDirectory(std::vector<std::string>& directory, std
 				toAdd.get(dir, dirMaxSize, delim);
 
 				// check if directory exists
+				directory.push_back(std::string(dir));
 				err::FileError err;
-				if (err::good(err = fs.directoryExists(directory)))
+				if (err::bad(err = fs.directoryExists(directory)))
 				{
-					directory.push_back(std::string(dir));
-				}
-				else
 					throw err;
+				}					
 			}
 		}
 
