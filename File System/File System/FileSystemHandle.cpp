@@ -16,40 +16,17 @@ namespace file {
 	void FileSystemHandle::cd(const std::string& str) {
 		constructDirRef(str, _dir);
 	}
-	bool FileSystemHandle::constructDirRef(const std::string& str, DirectoryReference& ref) {
-		try
-		{
-			ref.directoryFromString(_dir, str, *_sys);
-		}
-		catch (err::FileError e)
-		{
-			std::cout << "File error: " << e << std::endl;
-			return true;
-		}
-		catch (const std::invalid_argument& e)
-		{
-			std::cout << e.what();
-			return true;
-		}
+	bool FileSystemHandle::constructDirRef(const std::string& str, DirectoryReference& ref)
+	{
+		ref.directoryFromString(_dir, str, *_sys);
+
 		return false;
 	}
 
 	bool FileSystemHandle::constructDirRefWithFile(const std::string& str, DirectoryReference& ref, std::string& filename)
 	{
-		try
-		{
-			filename = ref.directoryAndFileFromString(_dir, str, *_sys);
-		}
-		catch (err::FileError e)
-		{
-			std::cout << "File error: " << e << std::endl;
-			return true;
-		}
-		catch (const std::invalid_argument& e)
-		{
-			std::cout << e.what();
-			return true;
-		}
+		filename = ref.directoryAndFileFromString(_dir, str, *_sys);
+
 		return false;
 	}
 
@@ -58,7 +35,7 @@ namespace file {
 
 		if (err::bad(error))
 		{
-			std::cout << "Error creating folder, error: " << err::getMsg(error) << std::endl;
+			throw(error);
 		}
 	}
 	/* Create a file
@@ -67,7 +44,7 @@ namespace file {
 		err::FileError error = _sys->createFile(_dir.getDirectory(), file_name, access, data);
 		if (err::bad(error))
 		{
-			std::cout << "Error creating file, error: " << err::getMsg(error) << std::endl;
+			throw(error);
 		}
 	}
 	/* Remove a file or directory
@@ -77,12 +54,12 @@ namespace file {
 		err::FileError error = _sys->remove(_dir.getDirectory(), path);
 		if (err::bad(error))
 		{
-			std::cout << "Error removing item, error: " << err::getMsg(error) << std::endl;
+			throw(error);
 		}
 	}
 	/* Get the data in a file
 	*/
-	void FileSystemHandle::printFile(const std::string& file_name) {
+	std::string FileSystemHandle::printFile(const std::string& file_name) {
 		std::string data;
 		std::string fileName;
 
@@ -90,9 +67,9 @@ namespace file {
 
 		err::FileError error = _sys->getFile(_dir.getDirectory(), fileName, data);
 		if (err::good(error))
-			std::cout << data << std::endl;
+			return data + "\n";
 		else 
-			std::cout << "Couldn't access file, error: " << err::getMsg(error) << std::endl;
+			throw(error);
 	}
 	
 	void FileSystemHandle::copyFile(const std::string& sourceDirectory, const std::string& targetDirectory)
@@ -111,7 +88,7 @@ namespace file {
 		err::FileError err = _sys->copy(source.getDirectory(), sourceFileName, target.getDirectory(), targetFileName);
 		if (err::bad(err))
 		{
-			std::cout << "Error reading file: " << err::getMsg(err) << std::endl;
+			throw(err);
 		}
 	}
 
@@ -133,7 +110,7 @@ namespace file {
 		err::FileError err  = _sys->appendFile(appendData.getDirectory(), appendDataFileName, toAppend.getDirectory(), toAppendFileName);
 		if (err::bad(err))
 		{
-			std::cout << "Error appending file, id: " << err::getMsg(err) << std::endl;
+			throw(err);
 		}
 	}
 
@@ -154,28 +131,34 @@ namespace file {
 		err::FileError err = _sys->move(source.getDirectory(), sourceFileName, target.getDirectory(), targetFileName);
 		if (err::bad(err))
 		{
-			std::cout << "Error moving item, error: " << err::getMsg(err) << std::endl;
+			throw(err);
 		}
 	}
 
-	void FileSystemHandle::listDirectory() {
+	std::string FileSystemHandle::listDirectory() {
 		std::vector<std::string> list;
+		std::string out;
 		err::FileError err = _sys->listDir(_dir.getDirectory(), list);
 
 		if (err::good(err))
 		{
-			std::cout << "Listing directory:" << std::endl;
-
 			size_t size = list.size();
+
+			if (size > 0)
+				out += "Listing directory:\n";
+			else
+				out += "Empty directory.\n";
 
 			for (int i = 0; i < size; i++)
 			{
-				std::cout << list[i] << std::endl;
+				out += list[i] + "\n";
 			}
+
+			return out;
 		}
 		else
 		{
-			std::cout << "Error listing files, error: " << err::getMsg(err) << std::endl;
+			throw(err);
 		}
 	}
 

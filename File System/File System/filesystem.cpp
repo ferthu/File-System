@@ -237,7 +237,7 @@ err::FileError FileSystem::appendFile(const std::vector<std::string>& from_dir, 
 	if (err::bad(error))
 		return error;
 	//Get second file
-	error = t_dir->getFile(from_name, ref_t);
+	error = t_dir->getFile(to_name, ref_t);
 	if (err::bad(error))
 		return error;
 

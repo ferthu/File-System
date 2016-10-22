@@ -239,7 +239,7 @@ namespace file {
 		if (err::bad(error))
 			return error;
 		//Verify the appended file is writable
-		if (file_a._header.isWritable())
+		if (!file_a._header.isWritable())
 			return err::NO_WRITE_ACCESS;
 
 		//Read the file to append

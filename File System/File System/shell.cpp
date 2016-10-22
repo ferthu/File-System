@@ -26,85 +26,85 @@ int main(void) {
     bool bRun = true;
 
     do {
-        std::cout << user << ":" << _handle << "$ ";
-        getline(std::cin, userCommand);
+		try
+		{
+			std::cout << user << ":" << _handle << "$ ";
+			getline(std::cin, userCommand);
 
-        int nrOfCommands = parseCommandString(userCommand, commandArr);
-        if (nrOfCommands > 0) {
+			int nrOfCommands = parseCommandString(userCommand, commandArr);
+			if (nrOfCommands > 0) {
 
-            int cIndex = findCommand(commandArr[0]);
-            switch(cIndex) {
+				int cIndex = findCommand(commandArr[0]);
+				switch (cIndex) {
 
-            case 0: // quit
-                bRun = false;
-                std::cout << "Exiting\n";
-                break;
-            case 1: // format
-				_handle.format();
-                break;
-            case 2: // ls
-				_handle.listDirectory();
-                break;
-            case 3: // create
-				std::cout << "Write file data:\n";
-				getline(std::cin, tmp);
-				_handle.createFile(commandArr[1], 4, tmp);
-                break;
-            case 4: // cat
-				_handle.printFile(commandArr[1]);
-                break;
-            case 5: // createImage
-				_handle.createImage(commandArr[1]);
-                break;
-            case 6: // restoreImage
-				_handle.readImage(commandArr[1]);
-                break;
-            case 7: // rm
-				_handle.remove(commandArr[1]);
-                break;
-            case 8: // cp
-				_handle.copyFile(commandArr[1], commandArr[2]);
-                break;
-            case 9: // append
-				_handle.appendFile(commandArr[1], commandArr[2]);
-                break;
-            case 10: // mv
-				_handle.move(commandArr[1], commandArr[2]);
-                break;
-            case 11: // mkdir
-				_handle.createFolder(commandArr[1]);
-                break;
-            case 12: // cd
-				_handle.cd(commandArr[1]);
-                break;
-            case 13: // pwd
-				std::cout << _handle.getWorkingPath() << std::endl;
-                break;
-            case 14: // help
-                std::cout << help() << std::endl;
-                break;
-			case 15: // chmod
-				try
-				{
+				case 0: // quit
+					bRun = false;
+					std::cout << "Exiting\n";
+					break;
+				case 1: // format
+					_handle.format();
+					break;
+				case 2: // ls
+					std::cout << _handle.listDirectory();
+					break;
+				case 3: // create
+					std::cout << "Write file data:\n";
+					getline(std::cin, tmp);
+					_handle.createFile(commandArr[1], 4, tmp);
+					break;
+				case 4: // cat
+					std::cout << _handle.printFile(commandArr[1]);
+					break;
+				case 5: // createImage
+					_handle.createImage(commandArr[1]);
+					break;
+				case 6: // restoreImage
+					_handle.readImage(commandArr[1]);
+					break;
+				case 7: // rm
+					_handle.remove(commandArr[1]);
+					break;
+				case 8: // cp
+					_handle.copyFile(commandArr[1], commandArr[2]);
+					break;
+				case 9: // append
+					_handle.appendFile(commandArr[1], commandArr[2]);
+					break;
+				case 10: // mv
+					_handle.move(commandArr[1], commandArr[2]);
+					break;
+				case 11: // mkdir
+					_handle.createFolder(commandArr[1]);
+					break;
+				case 12: // cd
+					_handle.cd(commandArr[1]);
+					break;
+				case 13: // pwd
+					std::cout << _handle.getWorkingPath() << std::endl;
+					break;
+				case 14: // help
+					std::cout << help() << std::endl;
+					break;
+				case 15: // chmod
 					_handle.setRights(commandArr[2], commandArr[1]);
+					break;
+				default:
+					std::cout << "Unknown command: " << commandArr[0] << std::endl;
 				}
-				catch (std::invalid_argument e)
-				{
-					std::cout << e.what();
-				}
-				catch (std::out_of_range e)
-				{
-					std::cout << e.what();
-				}
-				catch (err::FileError err)
-				{
-					std::cout << "Error: " << err::getMsg(err);
-				}
-				break;
-            default:
-                std::cout << "Unknown command: " << commandArr[0] << std::endl;
-            }
-        }
+			}
+		}
+		catch (err::FileError e)
+		{
+			std::cout << "File error: " << err::getMsg(e) << std::endl;
+		}
+		catch (const std::invalid_argument& e)
+		{
+			std::cout << e.what();
+		}
+		catch (std::out_of_range e)
+		{
+			std::cout << e.what();
+		}
     } while (bRun == true);
 
     return 0;

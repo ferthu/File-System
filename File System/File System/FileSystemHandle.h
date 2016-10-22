@@ -39,7 +39,7 @@ namespace file {
 		void cd(const std::string& str);
 		/* List directory items
 		*/
-		void listDirectory();
+		std::string listDirectory();
 		/* Create a file
 		*/
 		void createFile(const std::string& file_name, char access, const std::string& data);
@@ -48,7 +48,7 @@ namespace file {
 		void remove(const std::string& path);
 		/* Get the data in a file
 		*/
-		void printFile(const std::string& file_name);
+		std::string printFile(const std::string& file_name);
 		/* Copies a file from a directory to another
 		*/
 		void copyFile(const std::string& sourceDirectory, const std::string& targetDirectory);
