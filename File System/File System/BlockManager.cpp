@@ -87,6 +87,27 @@ namespace file {
 		created_ref = FileReference(file._header._fileName, head_block, file._header._size);
 		return err::SUCCESS;
 	}
+	/* Rewrite the file header with the specified access status
+	*/
+	err::FileError BlockManager::writeAccess(const FileReference& file, char access) {
+		VirtualReader reader(_disk);
+		VirtualWriter writer(_disk);
+		FileHeader header;
+
+		// read header
+		err::FileError err = reader.readHeader(file._block, header);
+		if (err::bad(err))
+			return err;
+
+		header._access = access;
+
+		// write updated header
+		err = writer.writeHeader(file._block, header);
+		if (err::bad(err))
+			return err;
+
+		return err::SUCCESS;
+	}
 	/* Overwrites a file reference while ensuring old file is intact if an error occured. Releases any extra blocks contained in file on success.  Same guarantee as writeFile(...).
 	file		<>	File information except the allocated blocks to be written. Blocks is assigned on success, previous blocks is ensured to be intact on failure.
 	created_ref	<>	File reference, receives the file if write was successfull. Ensured to be intact on failure.
@@ -188,29 +209,6 @@ namespace file {
 		return overwriteFile(file, file_to_edit);
 	}
 
-
-	/* Rewrite the file header with the specified access status
-	*/
-	err::FileError BlockManager::writeAccess(const FileReference& file, char access) {
-		VirtualReader reader(_disk);
-		VirtualWriter writer(_disk);
-		FileHeader header;
-
-		// read header
-		err::FileError err = reader.readHeader(file._block, header);
-		if (err::bad(err))
-			return err;
-
-		header._access = access;
-
-		// write updated header
-		err = writer.writeHeader(file._block, header);
-		if (err::bad(err))
-			return err;
-		
-		return err::SUCCESS;
-	}
-
 	/* Appends from the first file to the other removing the first file.
 	from	<<	File to append to the other and remove when operation is complete
 	to		<>	Second file that the first file is appended to, reference file is overwritten returning a new reference
@@ -283,30 +281,6 @@ namespace file {
 		manager._owner->occupy(occupied);
 		return manager;
 	}
-
-#pragma region Deprecated
-	/* Release the extra blocks so the vector is of size numblocks
-	*/
-	void BlockManager::releaseExtra(int numblocks, std::vector<int>& blocks) {
-		//Release the extra blocks
-		for (unsigned int i = numblocks; i < blocks.size(); i++)
-			_owner->release(blocks[i]);
-		//Erase the blocks from the file
-		blocks.erase(blocks.begin() + numblocks, blocks.end());
-	}
-	/* Allocate the extra blocks so the vector is the size of numblocks
-	*/
-	err::FileError  BlockManager::allocateMore(int numblocks, std::vector<int>& blocks) {
-		std::vector<int> new_blocks;
-		err::FileError error = _owner->allocate((unsigned int)(numblocks - blocks.size()), new_blocks);
-		//Verify no error allocating blocks
-		if (err::bad(error))
-			return error;
-		//Add blocks to the block vector
-		for (unsigned int i = 0; i < new_blocks.size(); i++)
-			blocks.push_back(new_blocks[i]);
-		return err::SUCCESS;
-	}
 	/* Helper function to separate a block for the header */
 	int BlockManager::extractHeadBlock(std::vector<int>& blocks) {
 		//Acquire the first buffer for the header
@@ -314,7 +288,6 @@ namespace file {
 		blocks.erase(blocks.begin());
 		return head_block;
 	}
-#pragma endregion
 
 	void BlockManager::format()
 	{

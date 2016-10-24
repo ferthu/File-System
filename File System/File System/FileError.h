@@ -24,12 +24,15 @@ namespace err {
 		/* Not enough available memory
 		*/
 		MEMORY_OVERFLOW = 6,
-		/* A bad block was sent for release to memory manager 
+		/* A bad block was sent for release to memory manager
 		*/
 		CORRUPTED_BLOCK = -7,
 		/* File or folder was not found
 		*/
 		NOT_FOUND = 8,
+		/* File header was to large
+		*/
+		TO_LARGE_HEADER = 9,
 
 		/* Stream is not opened or it is closed.
 		*/
@@ -42,7 +45,7 @@ namespace err {
 		NO_WRITE_ACCESS = 22,
 		/* Trying to read data from a unbuffered read buffer.
 		*/
-		READ_BUFFER_OVERFLOW = 23,
+		READ_BUFFER_UNDERFLOW = 23,
 		/* Write stream failed to write to a block.
 		*/
 		WRITE_BUFFER_OVERFLOW = 24,

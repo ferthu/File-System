@@ -23,6 +23,9 @@ namespace file {
 		err::FileError error = _streambuf.openWrite(block);
 		if (!err::good(error))
 			return error;
+		//Verify buffer size
+		if (header.headerByteSize() > _streambuf.getBlockSize())
+			return err::TO_LARGE_HEADER;
 
 		_writer.writeChar(header._access);
 		_writer.writeString(header._fileName);

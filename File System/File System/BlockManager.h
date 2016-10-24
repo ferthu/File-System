@@ -50,18 +50,7 @@ namespace file {
 		header_block	<<	Block file header is stored in.
 		*/
 		err::FileError releaseFileBlocks(const FileHeader& header, const int header_block);
-
-#pragma region Deprecated: No incrementing! New write preserves state on failure!
-
-		/* Release the allocated blocks in the vector until it is the size of numblocks
-		*/
-		void releaseExtra(int numblocks, std::vector<int>& blocks);
-		/* Allocate the extra blocks so the vector is the size of numblocks
-		*/
-		err::FileError allocateMore(int numblocks, std::vector<int>& blocks);
-
-#pragma endregion
-
+		
 		BlockManager(const BlockManager& manager) = delete;
 		BlockManager& operator=(const BlockManager& manager) = delete;
 	public:

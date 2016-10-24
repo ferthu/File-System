@@ -39,6 +39,10 @@ namespace file {
 		bool isWritable() const {
 			return _access == 1 || _access > 2;
 		}
+		/* Function used to verify header size */
+		unsigned int headerByteSize() const {
+			return 1 + _fileName.length() + (3 + _blocks.size()) * sizeof(int);
+		}
 	};
 
 }

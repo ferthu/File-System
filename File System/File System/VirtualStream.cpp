@@ -127,7 +127,7 @@ namespace file {
 	bool VirtualStream::bufferNext() {
 		//Verify queue
 		if (_block_queue.empty()) {
-			_err = err::READ_BUFFER_OVERFLOW;
+			_err = err::READ_BUFFER_UNDERFLOW;
 			return false;
 		}
 		//Try to get next buffer
@@ -157,5 +157,17 @@ namespace file {
 		_block_queue = std::queue<int>();
 		return _err;
 	}
-
+	/* Get the size remaining of the buffered block
+	*/
+	unsigned int VirtualStream::getBlockSize() {
+		if (pptr()) {
+			//Write buffer
+			return _buffer.size() - (unsigned int)(pptr() - pbase());
+		}
+		else if (gptr()) {
+			//Read buffer
+			return _buffer.size() - (unsigned int)(gptr() - eback());
+		}
+		return 0;
+	}
 }

@@ -71,14 +71,15 @@ namespace file {
 		*/
 		VirtualStream(BlockDevice& device);
 		virtual ~VirtualStream();
-
-
 		/* Flush write stream
 		*/
 		err::FileError close();
 		/* Get the current error
 		*/
 		err::FileError getErr();
+		/* Get the size remaining of the buffered block
+		*/
+		unsigned int getBlockSize();
 	};
 }
 
