@@ -45,7 +45,7 @@ int main(void) {
 					_handle.format();
 					break;
 				case 2: // ls
-					std::cout << _handle.listDirectory();
+					std::cout << _handle.listDirectory(commandArr[1]);
 					break;
 				case 3: // create
 					std::cout << "Write file data:\n";
@@ -120,6 +120,9 @@ int parseCommandString(const std::string &userCommand, std::string strArr[]) {
         ssin >> strArr[counter];
         counter++;
     }
+	for (; counter < MAXCOMMANDS; counter++)
+		strArr[counter] = "";
+
     if (strArr[0] == "") {
         counter = 0;
     }
@@ -141,8 +144,8 @@ std::string help() {
     helpStr += "-----------------------------------------------------------------------------------\n" ;
     helpStr += "* quit:								Quit OSD Disk Tool\n";
     helpStr += "* format:							Formats disk\n";
-    helpStr += "* ls:								Lists contents of current directory.\n";
-    helpStr += "* create:							Creates a file and stores contents in current directory.\n";
+    helpStr += "* ls <directory>:						Lists contents of specified directory.\n";
+    helpStr += "* create <file>:						Creates a file and stores contents in specified directory.\n";
     helpStr += "* cat <file>:							Dumps contents of <file>.\n";
     helpStr += "* createImage <real-file>:					Saves disk to <real-file>\n";
     helpStr += "* restoreImage <real-file>:					Reads <real-file> onto disk\n";

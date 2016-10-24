@@ -79,7 +79,8 @@ namespace file {
 	*/
 	void FileSystemHandle::remove(const std::string& path)
 	{
-		err::FileError error = _sys->remove(_dir.getDirectory(), path);
+		DirectoryReference dir = _dir;
+		err::FileError error = _sys->remove(dir.getDirectory(), path);
 		if (err::isError(error))
 		{
 			throw(error);
@@ -90,10 +91,11 @@ namespace file {
 	std::string FileSystemHandle::getFile(const std::string& file_name) {
 		std::string data;
 		std::string fileName;
+		DirectoryReference dir = _dir;
 
-		constructDirRefWithFile(file_name, _dir, fileName);
+		constructDirRefWithFile(file_name, dir, fileName);
 
-		err::FileError error = _sys->getFile(_dir.getDirectory(), fileName, data);
+		err::FileError error = _sys->getFile(dir.getDirectory(), fileName, data);
 		if (err::bad(error))
 			throw error;
 		return data;
@@ -162,9 +164,17 @@ namespace file {
 		}
 	}
 
-	std::string FileSystemHandle::listDirectory() {
+	std::string FileSystemHandle::listDirectory(const std::string& dir) {
 		std::stringstream stream;
-		err::FileError err = _sys->listDir(_dir.getDirectory(), stream);
+		err::FileError err;
+		if(dir == "")
+			err = _sys->listDir(_dir.getDirectory(), stream);
+		else
+		{
+			DirectoryReference specifiedDir;
+			specifiedDir.directoryFromString(_dir, dir, *_sys);
+			err = _sys->listDir(specifiedDir.getDirectory(), stream);
+		}
 		//Check error
 		if (isError(err))
 			throw(err);
@@ -207,12 +217,13 @@ namespace file {
 
 	void FileSystemHandle::setRights(const std::string& fileDir, std::string status)
 	{
+		DirectoryReference dir = _dir;
 		std::string filename;
-		constructDirRefWithFile(fileDir, _dir, filename);
+		constructDirRefWithFile(fileDir, dir, filename);
 
 		int rights = std::stoi(status);
 
-		err::FileError err = _sys->setRights(_dir.getDirectory(), filename, rights);
+		err::FileError err = _sys->setRights(dir.getDirectory(), filename, rights);
 		if (err::isError(err))
 			throw err;
 	}

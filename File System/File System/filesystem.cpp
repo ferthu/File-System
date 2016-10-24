@@ -4,6 +4,7 @@
 #include"BinaryFileReader.h"
 #include"VirtualReader.h"
 #include"VirtualWriter.h"
+#include"DirectoryReference.h"
 
 FileSystem::FileSystem()
 	: _root(std::unique_ptr<file::Directory>(new file::Directory("Root"))), _manager() {
@@ -22,13 +23,18 @@ FileSystem::~FileSystem() {
 /* Removes a folder or file in the filesystem
 */
 err::FileError FileSystem::remove(const std::vector<std::string>& directory, const std::string& name) {
-	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	DirectoryReference specifiedDirectory;
+	specifiedDirectory.setDirectory(directory);
+	std::string foundName;
+	specifiedDirectory.directoryAndFileFromString(specifiedDirectory, name, *this, foundName);
+	
+	file::DirectoryAccess dir = _root.accessDirectory(specifiedDirectory.getDirectory());
 	if (dir.access()) {
-		file::type::Dir type = dir->getType(name);
+		file::type::Dir type = dir->getType(foundName);
 		if (type == file::type::File)
-			return rmFile(dir, name);
+			return rmFile(dir, foundName);
 		else if (type == file::type::Folder)
-			return rmFolder(dir, name);
+			return rmFolder(dir, foundName);
 		return err::NOT_FOUND;
 	}
 	return dir.getError();
@@ -111,13 +117,18 @@ err::FileError FileSystem::rmFolder(file::DirectoryAccess& dir, const std::strin
 #pragma region File Functions
 
 err::FileError FileSystem::createFile(const std::vector<std::string>& directory, const std::string& file_name, char access, const std::string& data) {
-	file::DirectoryAccess dir = _root.accessDirectory(directory);
+	DirectoryReference specifiedDirectory;
+	specifiedDirectory.setDirectory(directory);
+	std::string fileName;
+	specifiedDirectory.directoryAndFileFromString(specifiedDirectory, file_name, *this, fileName);
+
+	file::DirectoryAccess dir = _root.accessDirectory(specifiedDirectory.getDirectory());
 	if (dir.access()) {
 		//File reference operated on
 		file::FileReference ref;
 		/* Verify that file does not already exist
 		*/
-		if (err::good(dir->getFile(file_name, ref))) {
+		if (err::good(dir->getFile(fileName, ref))) {
 			/* Overwrite old file
 			*/
 			err::FileError error = _manager.overwriteFile(ref, data, access);
@@ -129,7 +140,7 @@ err::FileError FileSystem::createFile(const std::vector<std::string>& directory,
 		else {
 			/* Write a new file
 			*/
-			err::FileError error = _manager.writeFile(file_name, data, access, ref);
+			err::FileError error = _manager.writeFile(fileName, data, access, ref);
 			if (err::bad(error))
 				return error;
 			//Add the file

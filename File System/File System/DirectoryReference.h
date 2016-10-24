@@ -22,6 +22,9 @@ public:
 	// returns stored directory
 	const std::vector<std::string>& getDirectory() const;
 
+	// sets current directory
+	void setDirectory(const std::vector<std::string>& directory);
+
 	// creates and stores a directory from a string (relative or absolute)
 	void directoryFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs);
 

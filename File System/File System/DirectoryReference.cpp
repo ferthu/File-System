@@ -9,6 +9,11 @@ const std::vector<std::string>& DirectoryReference::getDirectory() const
 	return directory;
 }
 
+void DirectoryReference::setDirectory(const std::vector<std::string>& directory)
+{
+	this->directory = directory;
+}
+
 void DirectoryReference::directoryFromString(const DirectoryReference& currentDirectory, const std::string& str, const FileSystem& fs)
 {
 	std::stringstream input(str);

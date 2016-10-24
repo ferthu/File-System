@@ -41,7 +41,7 @@ namespace file {
 		void cd(const std::string& str);
 		/* List directory items
 		*/
-		std::string listDirectory();
+		std::string listDirectory(const std::string& dir);
 		/* Create a file
 		*/
 		void createFile(const std::string& file_name, char access, const std::string& data);
