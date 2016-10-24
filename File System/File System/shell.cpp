@@ -16,6 +16,8 @@ std::string availableCommands[NUMAVAILABLECOMMANDS] = {
 /* Takes usercommand from input and returns number of commands, commands are stored in strArr[] */
 int parseCommandString(const std::string &userCommand, std::string strArr[]);
 int findCommand(std::string &command);
+/* Verifies that an argument is included */
+bool verifyArgs(std::string args[MAXCOMMANDS], int num);
 std::string help();
 
 int main(void) {
@@ -48,39 +50,53 @@ int main(void) {
 					std::cout << _handle.listDirectory(commandArr[1]);
 					break;
 				case 3: // create
-					std::cout << "Write file data:\n";
-					getline(std::cin, tmp);
-					_handle.createFile(commandArr[1], 4, tmp);
+					if (verifyArgs(commandArr, 1)) {
+						std::cout << "Write file data:\n";
+						getline(std::cin, tmp);
+						_handle.createFile(commandArr[1], 4, tmp);
+					}
 					break;
 				case 4: // cat
-					std::cout << _handle.getFile(commandArr[1]) << std::endl;
+					if (verifyArgs(commandArr, 1))
+						std::cout << _handle.getFile(commandArr[1]) << std::endl;
 					break;
 				case 5: // createImage
-					_handle.createImage(commandArr[1]);
+					if (verifyArgs(commandArr, 1))
+						_handle.createImage(commandArr[1]);
 					break;
 				case 6: // restoreImage
-					if (_handle.readImage(commandArr[1]))
-						std::cout << "Filesystem loaded successfully." << std::endl;
-					else 
-						std::cout << "Error occured trying to read a stored image, verify file exists." << std::endl;
+					if (verifyArgs(commandArr, 1)) {
+						if (_handle.readImage(commandArr[1]))
+							std::cout << "Filesystem loaded successfully." << std::endl;
+						else
+							std::cout << "Error occured trying to read a stored image, verify file exists." << std::endl;
+					}
 					break;
 				case 7: // rm
-					_handle.remove(commandArr[1]);
+					if(verifyArgs(commandArr, 1))
+						_handle.remove(commandArr[1]);
 					break;
 				case 8: // cp
-					_handle.copyFile(commandArr[1], commandArr[2]);
+					if (verifyArgs(commandArr, 2))
+						_handle.copyFile(commandArr[1], commandArr[2]);
 					break;
 				case 9: // append
-					_handle.appendFile(commandArr[1], commandArr[2]);
+
+					if (verifyArgs(commandArr, 2))
+						_handle.appendFile(commandArr[1], commandArr[2]);
 					break;
 				case 10: // mv
-					_handle.move(commandArr[1], commandArr[2]);
+
+					if (verifyArgs(commandArr, 2))
+						_handle.move(commandArr[1], commandArr[2]);
 					break;
 				case 11: // mkdir
-					_handle.createFolder(commandArr[1]);
+					if (verifyArgs(commandArr, 1))
+						_handle.createFolder(commandArr[1]);
 					break;
 				case 12: // cd
-					_handle.cd(commandArr[1]);
+					if (verifyArgs(commandArr, 1))
+						_handle.cd(commandArr[1]);
 					break;
 				case 13: // pwd
 					std::cout << _handle.getWorkingPath() << std::endl;
@@ -89,7 +105,8 @@ int main(void) {
 					std::cout << help() << std::endl;
 					break;
 				case 15: // chmod
-					_handle.setRights(commandArr[2], commandArr[1]);
+					if (verifyArgs(commandArr, 2))
+						_handle.setRights(commandArr[2], commandArr[1][0]);
 					break;
 				default:
 					std::cout << "Unknown command: " << commandArr[0] << std::endl;
@@ -102,11 +119,11 @@ int main(void) {
 		}
 		catch (const std::invalid_argument& e)
 		{
-			std::cout << e.what();
+			std::cout << e.what() << std::endl;
 		}
 		catch (std::out_of_range e)
 		{
-			std::cout << e.what();
+			std::cout << e.what() << std::endl;
 		}
     } while (bRun == true);
 
@@ -136,6 +153,15 @@ int findCommand(std::string &command) {
         }
     }
     return index;
+}
+bool verifyArgs(std::string args[MAXCOMMANDS], int num) {
+	for (int i = 1; i < num + 1; i++) {
+		if (args[i] == "") {
+			std::cout << "Not enough arguments passed to command." << std::endl;
+			return false;
+		}
+	}
+	return true;
 }
 
 std::string help() {

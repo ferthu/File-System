@@ -32,16 +32,16 @@ namespace file {
 		std::vector<int> _blocks;
 
 		/* Verify the readable access */
-		bool isReadable() const {
+		inline bool isReadable() const {
 			return _access > 1;
 		}
 		/* Verify the readable access */
-		bool isWritable() const {
+		inline bool isWritable() const {
 			return _access == 1 || _access > 2;
 		}
 		/* Function used to verify header size */
-		unsigned int headerByteSize() const {
-			return 1 + _fileName.length() + (3 + _blocks.size()) * sizeof(int);
+		inline unsigned int headerByteSize() const {
+			return (unsigned int)(1 + _fileName.length() + (3 + _blocks.size()) * sizeof(int));
 		}
 	};
 

@@ -53,7 +53,7 @@ namespace file {
 		virtual type::Dir getType(const std::string& name) = 0;
 		/* Move ownership of a child directory or file
 		*/
-		virtual err::FileError moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& ref) = 0;
+		virtual err::FileError moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& move_to) = 0;
 		/* Virtual destructor
 		*/
 		virtual ~IDirectoryReference() {};

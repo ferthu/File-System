@@ -215,15 +215,17 @@ namespace file {
 	}
 
 
-	void FileSystemHandle::setRights(const std::string& fileDir, std::string status)
+	void FileSystemHandle::setRights(const std::string& fileDir, char status)
 	{
+		//Convert:
+		status -= 48;
+		if (status < 0 || status > 4)
+			throw std::invalid_argument("Invalid file access value");
 		DirectoryReference dir = _dir;
 		std::string filename;
-		constructDirRefWithFile(fileDir, dir, filename);
+		constructDirRefWithFile	(fileDir, dir, filename);
 
-		int rights = std::stoi(status);
-
-		err::FileError err = _sys->setRights(dir.getDirectory(), filename, rights);
+		err::FileError err = _sys->setRights(dir.getDirectory(), filename, status);
 		if (err::isError(err))
 			throw err;
 	}

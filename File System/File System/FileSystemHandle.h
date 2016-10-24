@@ -82,7 +82,7 @@ namespace file {
 
 		/* Sets access rights of a file
 		*/
-		void setRights(const std::string& fileDir, std::string status);
+		void setRights(const std::string& fileDir, char status);
 
 		/* Output working directory to the stream
 		*/
