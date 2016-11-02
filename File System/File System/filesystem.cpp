@@ -42,22 +42,32 @@ err::FileError FileSystem::remove(const std::vector<std::string>& directory, con
 
 err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const std::string& from_name, const std::vector<std::string>& move_dir, const std::string& move_name) {
 
+	file::FileReference fr, rm;
 	//Access first directory
 	file::DirectoryAccess f_dir = _root.accessDirectory(from_dir);
 	if (!f_dir.access())
 		return f_dir.getError();
+	
+	//Verify from file is movable.
+	err::FileError error = f_dir->getFile(from_name, fr);
+	if (err::bad(error))
+		return error;
+	error = _manager.verifyAccess(fr, 3);
+	if (err::bad(error))
+		return error;
+
 	//Access second directory
 	file::DirectoryAccess m_dir = _root.accessDirectory(move_dir);
 	if (!m_dir.access())
 		return m_dir.getError();
 
-	file::FileReference fr;
-	file::FileHeader fh;
-	f_dir->getFile(from_name, fr);
-	file::VirtualReader reader(_manager.getDisk());
-	reader.readHeader(fr._block, fh);
-	if (!fh.isReadable())
-		return err::NO_READ_ACCESS;
+	//Remove any existing file
+	error = m_dir->getFile(move_name, rm);
+	if (err::good(error)) {
+		error = rmFile(m_dir, move_name);
+		if (err::bad(error))
+			return error;
+	}
 
 	//Move
 	return f_dir->moveChild(from_name, move_name, *m_dir._directory);
@@ -262,8 +272,11 @@ err::FileError FileSystem::copy(const std::vector<std::string>& from_dir, const 
 		return c_dir.getError();
 
 	file::FileReference ref_f, ref_c;
+	//Check if a file is overwritten. Ignore non-exist error.
+	err::FileError error = c_dir->getFile(copy_name, ref_c);
+
 	//Get file to copy
-	err::FileError error = f_dir->getFile(from_name, ref_f);
+	error = f_dir->getFile(from_name, ref_f);
 	if (err::bad(error))
 		return error;
 

@@ -28,6 +28,10 @@ namespace file {
 		FileReference(std::string name, int block, unsigned int byte_size)
 		: _name(name), _block(block), _byte_size(byte_size) {		}
 
+		/* Returns if file is empty
+		*/
+		bool empty() { return _name.size() == 0; }
+
 		/* Compare the name to the file name
 		*/
 		bool operator==(const std::string& compare) {

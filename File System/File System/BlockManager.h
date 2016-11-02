@@ -54,7 +54,6 @@ namespace file {
 		BlockManager(const BlockManager& manager) = delete;
 		BlockManager& operator=(const BlockManager& manager) = delete;
 	public:
-		MemBlockDevice& getDisk();
 
 		BlockManager(unsigned int num_blocks = 512);
 		BlockManager(BlockManager&& manager);
@@ -71,10 +70,10 @@ namespace file {
 		/* Copy the specific file
 		name		<<	Name of the new file.
 		from		<<	Reference to the file that is to be copied.
-		created_ref	>>	Reference to the created file.
+		copy_ref	<>	Reference to existing file to overwrite (if one exists). Returns the copy file reference.
 		return		>>	Returns if a copy of the file was created or if an error occured.
 		*/
-		err::FileError copyFile(const std::string& name, const FileReference& from, FileReference& created_ref);
+		err::FileError copyFile(const std::string& name, const FileReference& from, FileReference& copy_ref);
 		/* Overwrite the data in the file
 		file_to_edit	<<	Reference to the file that is overwritten
 		data			<<	Data to write to the file
@@ -104,6 +103,13 @@ namespace file {
 		return	>>	 Verifies file is writable or reference pointed to a header. If another problem was found with the file reference, any relevant data is removed even on failure.
 		*/
 		err::FileError removeFile(const FileReference& file);
+
+		/* Verifies that the specified file has the access.
+		file	<<	File to verify
+		access	<<	Access that the file should have.
+		return	>>	Error if a specified access is not met or if file does not exist.
+		*/
+		err::FileError verifyAccess(const FileReference& file, char access);
 
 		/* Get the total number of blocks in manager.
 		*/

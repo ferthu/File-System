@@ -31,10 +31,6 @@ namespace file {
 		return (int)(bytes / _block_size + (bytes % (bytes + 1) > 0));
 	}
 
-	MemBlockDevice& BlockManager::getDisk()
-	{
-		return _disk;
-	}
 	/* Release blocks allocated for a file. Checks if the parsed blocks are corrupted before removing.
 	blocks			<<	File blocks removed
 	header_block	<<	
@@ -142,8 +138,6 @@ namespace file {
 		VirtualReader reader(_disk);
 		FileHeader header;
 		reader.readHeader(file._block, header);
-		if (!header.isReadable())
-			return err::NO_READ_ACCESS;
 		if (!header.isWritable())
 			return err::NO_WRITE_ACCESS;
 		return releaseFileBlocks(header, file._block);
@@ -169,10 +163,10 @@ namespace file {
 	/* Copy the specific file
 	name		<<	Name of the new file.
 	from		<<	Reference to the file that is to be copied.
-	created_ref	>>	Reference to the created file.
+	copy_ref	<>	Reference to existing file to overwrite (if one exists). Returns the copy file reference.
 	return		>>	Returns if a copy of the file was created or if an error occured.
 	*/
-	err::FileError BlockManager::copyFile(const std::string& name, const FileReference& from, FileReference& created_ref) {
+	err::FileError BlockManager::copyFile(const std::string& name, const FileReference& from, FileReference& copy_ref) {
 		VirtualReader reader(_disk);
 
 		File ret;
@@ -181,8 +175,11 @@ namespace file {
 			return error;
 		//Change name
 		ret._header._fileName = name;
-		//Write a copy
-		return writeFile(ret, created_ref);
+		//Write or overwrite an existing file with the copy.
+		if (copy_ref.empty())
+			return writeFile(ret, copy_ref);
+		else
+			return overwriteFile(copy_ref, ret.getData(), ret._header._access);
 	}
 	/* Overwrite the data in the file
 	file_to_edit	<<	Reference to the file that is overwritten
@@ -241,6 +238,23 @@ namespace file {
 
 		//Release the appended file.
 		return releaseFileBlocks(file_b._header, from._block);
+	}
+
+	/* Verifies that the specified file has the access.
+	file	<<	File to verify
+	access	<<	Access that the file should have.
+	return	>>	Error if a specified access is not met or if file does not exist.
+	*/
+	err::FileError BlockManager::verifyAccess(const FileReference& file, char access) {
+		VirtualReader reader(_disk);
+		FileHeader header;
+		err::FileError error = reader.readHeader(file._block, header);
+		if (err::bad(error))
+			return error;
+		//Verify all good
+		if (access == header._access || (header._access > 2 && access != 0))
+			return err::SUCCESS;
+		return access == 1 ? err::NO_READ_ACCESS : err::NO_WRITE_ACCESS;
 	}
 	/* Write to stream
 	*/
