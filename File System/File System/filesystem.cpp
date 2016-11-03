@@ -47,7 +47,7 @@ err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const 
 	file::DirectoryAccess f_dir = _root.accessDirectory(from_dir);
 	if (!f_dir.access())
 		return f_dir.getError();
-	
+
 	//Verify from file is movable.
 	err::FileError error = f_dir->getFile(from_name, fr);
 	if (err::bad(error))
@@ -61,12 +61,18 @@ err::FileError FileSystem::move(const std::vector<std::string>& from_dir, const 
 	if (!m_dir.access())
 		return m_dir.getError();
 
-	//Remove any existing file
+	//Remove any existing file with same name.
 	error = m_dir->getFile(move_name, rm);
 	if (err::good(error)) {
-		error = rmFile(m_dir, move_name);
-		if (err::bad(error))
-			return error;
+		//Verify file isn't moved onto itself before removing target.
+		if (f_dir._directory == m_dir._directory && move_name == from_name) 
+			return err::SUCCESS;
+		//Remove file:
+		else {
+			error = rmFile(m_dir, move_name);
+			if (err::bad(error))
+				return error;
+		}
 	}
 
 	//Move

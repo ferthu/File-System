@@ -81,7 +81,9 @@ namespace file {
 	/* Move ownership of a child directory or file
 	*/
 	err::FileError Directory::moveChild(const std::string& name, const std::string& new_name, IDirectoryReference& move_to) {
+		FileReference ref;
 		int dir_index = getDirectory(name);
+		//Move directory node:
 		if (dir_index >= 0) {
 			_directories[dir_index]->_name = new_name;
 			int byte_size = _directories[dir_index]->_byte_size;
@@ -89,8 +91,9 @@ namespace file {
 			removeDirectory(dir_index, byte_size);
 			return err::SUCCESS;
 		}
-		FileReference ref;
-		if (err::good(getFile(name, ref))) {
+		//Move file:
+		else if (err::good(getFile(name, ref)) && 
+			(&move_to != this || name != new_name)) { //Verify file isn't moved onto itself.
 			move_to.addFile(FileReference(new_name, ref._block, ref._byte_size));
 			removeFile(ref);
 			return err::SUCCESS;

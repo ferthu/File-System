@@ -47,6 +47,9 @@ namespace file {
 		/* Buffer a block for reading
 		*/
 		bool bufferNext();
+		/* Write buffer to queued block.
+		*/
+		bool writeBuffer();
 
 		/* Queue a block for the stream */
 		void queue_block(int block);

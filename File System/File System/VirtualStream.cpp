@@ -95,16 +95,13 @@ namespace file {
 			return traits_type::eof();
 		}
 		//Write the buffer.
-		if (0 > _device.writeBlock(_block_queue.front(), _buffer.begin())) {
-			_err = err::INVALID_BLOCK;
+		if (!writeBuffer())
 			return traits_type::eof();
+		//Do a secondary check validating the block queue.
+		if (_block_queue.empty()) {
+			_err = err::WRITE_BUFFER_OVERFLOW;
+			return  traits_type::eof();
 		}
-		_block_queue.pop();
-		//Reset write pointers
-		setp_cur(0);
-		//Verify there is another block to write
-		if (_block_queue.empty())
-			return traits_type::eof();
 		
 		//Set c
 		_buffer.begin()[0] = traits_type::to_char_type(c);
@@ -121,6 +118,24 @@ namespace file {
 		if (!bufferNext())
 			return traits_type::eof();
 		return *gptr();
+	}
+	/* Write buffer to queued block.
+	*/
+	bool VirtualStream::writeBuffer() {
+		//Do a initial check validating the block queue.
+		if (_block_queue.empty()) {
+			_err = err::WRITE_BUFFER_OVERFLOW;
+			return false;
+		}
+		//Write the buffer.
+		if (0 > _device.writeBlock(_block_queue.front(), _buffer.begin())) {
+			_err = err::INVALID_BLOCK;
+			return false;
+		}
+		_block_queue.pop();
+		//Reset write pointers
+		setp_cur(0);
+		return true;
 	}
 	/* Buffer a block for reading
 	*/
@@ -145,12 +160,10 @@ namespace file {
 	/* Flush write stream
 	*/
 	err::FileError VirtualStream::close() {
-		//Verify that this is a write buffer with remaining data and everything is OK
-		if (pptr() == nullptr || _block_queue.empty() || err::bad(_err))
-			return _err;
-		//Flush the write buffer to virtual disk.
-		if (0 > _device.writeBlock(_block_queue.front(), _buffer.begin()))
-			_err = err::INVALID_BLOCK;
+		//Verify this is a functioning write buffer.
+		if (pptr() != nullptr && err::good(_err))
+			//Flush the write buffer to virtual disk.
+			writeBuffer();
 		setp(nullptr, nullptr, nullptr);
 		setg(nullptr, nullptr, nullptr);
 		//Flush queue
